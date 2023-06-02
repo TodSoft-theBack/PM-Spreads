@@ -45,7 +45,10 @@
     <ClCompile Include="IInterfacable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ApplicationInterface.cpp">
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadsheetsInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,7 +83,10 @@
     <ClInclude Include="IInterfacable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationInterface.h">
+    <ClInclude Include="Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadsheetsInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

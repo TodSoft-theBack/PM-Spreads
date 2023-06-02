@@ -127,26 +127,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ApplicationInterface.cpp" />
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellFactory.cpp" />
     <ClCompile Include="DecimalCell.cpp" />
     <ClCompile Include="FormulaCell.cpp" />
     <ClCompile Include="IInterfacable.cpp" />
     <ClCompile Include="IntegerCell.cpp" />
+    <ClCompile Include="SpreadsheetsInterface.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TextCell.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ApplicationInterface.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellFactory.h" />
     <ClInclude Include="DecimalCell.h" />
     <ClInclude Include="FormulaCell.h" />
     <ClInclude Include="IInterfacable.h" />
     <ClInclude Include="IntegerCell.h" />
+    <ClInclude Include="SpreadsheetsInterface.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="TextCell.h" />

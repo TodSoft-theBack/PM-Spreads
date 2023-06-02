@@ -16,6 +16,7 @@ class Table
 		size_t Columns() const;
 		void AppendRow(const Vector<Cell*>& row);
 		void AppendRow(Vector<Cell*>&& row);
+		const Cell* CellAt(unsigned row, unsigned column) const;
 		friend std::ostream& operator<<(std::ostream& output, const Table& table);
 };
 

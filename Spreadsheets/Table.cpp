@@ -1,5 +1,16 @@
 #include "Table.h"
 
+Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
+{
+	for (size_t i = 0; i < rows; i++)
+	{
+		container.PushBack(std::move(Vector<Cell*>(columns)));
+		for (size_t j = 0; j < columns; j++)
+			container[i].PushBack(std::move(nullptr));
+	}
+
+}
+
 size_t Table::Rows() const
 {
     return _rows;
@@ -20,15 +31,9 @@ void Table::AppendRow(Vector<Cell*>&& row)
 	container.PushBack(std::move(row));
 }
 
-Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
+const Cell* Table::CellAt(unsigned row, unsigned column) const
 {
-	for (size_t i = 0; i < rows; i++)
-	{
-		container.PushBack(std::move(Vector<Cell*>(columns)));
-		for (size_t j = 0; j < columns; j++)
-			container[i].PushBack(std::move(nullptr));
-	}
-	
+	return container[row][column];
 }
 
 std::ostream& operator<<(std::ostream& output, const Table& table)

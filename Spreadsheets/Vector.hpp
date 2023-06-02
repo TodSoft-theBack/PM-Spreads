@@ -1,5 +1,6 @@
-#include <iostream>
 #pragma once
+#include <iostream>
+#include <sstream>
 
 template<typename T>
 class Vector
@@ -26,6 +27,7 @@ class Vector
         size_t Count() const;
         bool Contains(const T& element) const;
         const T* Collection() const;
+        std::stringstream ToString() const;
 
         const Vector<T>& operator=(const Vector<T>& vector);
         const Vector<T>& operator=(Vector<T>&& vector);
@@ -34,6 +36,10 @@ class Vector
 
         void PushBack(const T& item);
         void PushBack(T&& item);
+        int IndexOf(const T& item, unsigned startIndex) const;
+        int IndexOf(const T& item) const;
+        int LastIndexOf(const T& item, unsigned startIndex) const;
+        int LastIndexOf(const T& item) const;
         void InsertAt(unsigned index, const T& item);
         void InsertAt(unsigned index, T&& item);
         void RemoveAt(unsigned index);
@@ -151,6 +157,14 @@ const T* Vector<T>::Collection() const
 }
 
 template<typename T>
+std::stringstream Vector<T>::ToString() const
+{
+    std::stringstream stream;
+    stream << *this;
+    return stream;
+}
+
+template<typename T>
 const Vector<T>& Vector<T>::operator=(const Vector<T>& vector)
 {
     if (this != &vector)
@@ -206,6 +220,50 @@ void Vector<T>::PushBack(T&& item)
         Resize(capacity * 2);
     
     collection[count++] = std::move(item);
+}
+
+template<typename T>
+inline int Vector<T>::IndexOf(const T& item, unsigned startIndex) const
+{
+    int index = -1;
+    if (startIndex >= count)
+        throw std::runtime_error("Invalid index");
+    for (int i = startIndex; i < count; i++)
+        if (operator[](i) == item)
+            return i;
+    return index;
+}
+
+template<typename T>
+inline int Vector<T>::IndexOf(const T& item) const
+{
+    int index = -1;
+    for (int i = 0; i < count; i++)
+        if (operator[](i) == item)
+            return i;
+    return index;
+}
+
+template<typename T>
+inline int Vector<T>::LastIndexOf(const T& item, unsigned startIndex) const
+{
+    int index = -1;
+    if (startIndex >= count)
+        throw std::runtime_error("Invalid index");
+    for (int i = startIndex; i >= 0; i--)
+        if (operator[](i) == item)
+            return i;
+    return index;
+}
+
+template<typename T>
+inline int Vector<T>::LastIndexOf(const T& item) const
+{
+    int index = -1;
+    for (int i = count - 1; i >= 0; i--)
+        if (operator[](i) == item)
+            return i;
+    return index;
 }
 
 template<typename T>

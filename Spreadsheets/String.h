@@ -26,6 +26,7 @@ class String
 		byte LastByteOf(size_t variable) const;
 		byte& LastByteOf(size_t& variable);
 		byte& LengthByte();
+		void SetLength(size_t length);
 
 		// Only for small strings
 		char CharAt(unsigned index) const; 
@@ -40,23 +41,44 @@ class String
 		String(String&& temporary);
 
 	    size_t Length() const;
-		StringView SubStringView(unsigned startIndex, size_t length);
-		String Substring(unsigned startIndex, size_t length);
-		
+		StringView SubStringView(unsigned startIndex, size_t length) const;
+		StringView SubStringView(unsigned startIndex) const;
+		String Substring(unsigned startIndex, size_t length) const;
+		String Substring(unsigned startIndex) const;
+		const String SubstringConst(unsigned startIndex, size_t length) const;
+		const String SubstringConst(unsigned startIndex) const;
 		String& operator=(const String& rhs);
 		String& operator=(String&& rhs);
 		String& operator+=(const String& rhs);
+		String& operator+=(char rhs);
 	    char operator[](unsigned index) const;
 		char& operator[](unsigned index);
 		const char* C_Str() const;
+		int IndexOf(char symbol, unsigned startIndex) const;
 		int IndexOf(char symbol) const;
+		int LastIndexOf(char symbol, unsigned startIndex) const; 
+		int LastIndexOf(char symbol) const;
 		void Trim();
 		String Trim() const;
-		Vector<String> Split(char delim);
+		Vector<String> Split(char delim = ' ') const;
 		
 		friend String operator+(const String& lhs, const String& rhs);
-        friend std::ostream& operator<<(std::ostream& output, const String& string);
 		friend std::istream& operator>>(std::istream& input, String& string);
-		
 	    ~String();
 };
+
+std::ostream& operator<<(std::ostream& output, const String& string);
+
+bool operator==(const String& lhs, const String& rhs);
+bool operator!=(const String& lhs, const String& rhs);
+bool operator<(const String& lhs, const String& rhs);
+bool operator>(const String& lhs, const String& rhs);
+bool operator<=(const String& lhs, const String& rhs);
+bool operator>=(const String& lhs, const String& rhs);
+
+bool operator==(const String& lhs, const char* rhs);
+bool operator!=(const String& lhs, const char* rhs);
+bool operator<(const String& lhs, const char* rhs);
+bool operator>(const String& lhs, const char* rhs);
+bool operator<=(const String& lhs, const char* rhs);
+bool operator>=(const String& lhs, const char* rhs);
