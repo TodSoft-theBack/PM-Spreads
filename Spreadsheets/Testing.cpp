@@ -1,13 +1,13 @@
 #include <iostream>
-#include "ApplicationInterface.h"
+#include "Application.h"
 #include "SpreadsheetsInterface.h"
 
 int main()
 {
-	Application _interface;
-	_interface.SetApplicationName("PM Spreads");
-	_interface.SetExitCommand("Exit");
-	_interface.SetInterface(new SpreadsheetsInterface());
-	_interface.Run();
+	Application app;
+	app.SetApplicationName("PM Spreads");
+	app.SetExitCommand("Exit");
+	app.SetInterface(new SpreadsheetsInterface());
+	app.Run();
 	return EXIT_SUCCESS;
 }
