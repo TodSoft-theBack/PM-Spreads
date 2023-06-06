@@ -14,7 +14,7 @@ void String::CopyMemberData(const String& copy)
 	}
 }
 
-void String::MoveMemberData(String&& temporary)
+void String::MoveMemberData(String&& temporary) noexcept
 {
 	if(temporary.IsSmallString())
 	{
@@ -183,7 +183,7 @@ String::String(const String& string)
 	CopyMemberData(string);
 }
 
-String::String(String&& temptorary)
+String::String(String&& temptorary) noexcept
 {
 	MoveMemberData(std::move(temptorary));
 }
@@ -269,7 +269,7 @@ String& String::operator=(const String& rhs)
 	return *this;
 }
 
-String& String::operator=(String&& temporary)
+String& String::operator=(String&& temporary) noexcept
 {
 	if (this != &temporary)
 	{

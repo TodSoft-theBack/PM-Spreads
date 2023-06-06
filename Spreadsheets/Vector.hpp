@@ -325,7 +325,7 @@ template<typename V>
 std::ostream& operator<<(std::ostream& stream, const Vector<V>& vector)
 {
     stream <<"{ ";
-    for (size_t i = 0; i < vector.count; i++)
+    for (unsigned i = 0; i < vector.count; i++)
         stream << vector[i] << (i != vector.count - 1 ? ", ":"");
     stream <<" }";
     return stream;

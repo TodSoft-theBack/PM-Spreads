@@ -20,7 +20,7 @@ class String
 
 	    void CopyMemberData(const String& copy);
 	    void FreeMemberData();
-		void MoveMemberData(String&& temporary);
+		void MoveMemberData(String&& temporary) noexcept;
 		bool IsSmallString() const;
 		byte LengthByte() const;
 		byte LastByteOf(size_t variable) const;
@@ -38,7 +38,7 @@ class String
 	    String(const char* string);
 		String(std::istream& input);
 	    String(const String& string);
-		String(String&& temporary);
+		String(String&& temporary) noexcept;
 
 	    size_t Length() const;
 		StringView SubStringView(unsigned startIndex, size_t length) const;
@@ -48,7 +48,7 @@ class String
 		const String SubstringConst(unsigned startIndex, size_t length) const;
 		const String SubstringConst(unsigned startIndex) const;
 		String& operator=(const String& rhs);
-		String& operator=(String&& rhs);
+		String& operator=(String&& rhs) noexcept;
 		String& operator+=(const String& rhs);
 		String& operator+=(char rhs);
 	    char operator[](unsigned index) const;

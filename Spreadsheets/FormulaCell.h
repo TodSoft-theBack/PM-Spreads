@@ -1,6 +1,10 @@
 #pragma once
-#include "TextCell.h"
-class FormulaCell : public TextCell
+#include "String.h"
+
+class FormulaCel
 {
+	private:
+		String value;
+	public:
 };
 

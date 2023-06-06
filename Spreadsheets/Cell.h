@@ -1,9 +1,10 @@
 #pragma once
 #include <iostream>
+#include "String.h"
 
 class Cell
 {
 	public:
-		virtual void SetValue(const char* string) = 0;
+		virtual String ToString() const = 0;
 };
 
