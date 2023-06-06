@@ -26,6 +26,8 @@ class String
 		byte LastByteOf(size_t variable) const;
 		byte& LastByteOf(size_t& variable);
 		byte& LengthByte();
+
+		
 		void SetLength(size_t length);
 
 		// Only for small strings
@@ -34,7 +36,7 @@ class String
 		
     public:
 	    String();
-		String(size_t capacity);
+		explicit String(size_t number);
 	    String(const char* string);
 		String(std::istream& input);
 	    String(const String& string);
@@ -61,6 +63,7 @@ class String
 		void Trim();
 		String Trim() const;
 		Vector<String> Split(char delim = ' ') const;
+		static String NumericString(size_t number);
 		
 		friend String operator+(const String& lhs, const String& rhs);
 		friend std::istream& operator>>(std::istream& input, String& string);

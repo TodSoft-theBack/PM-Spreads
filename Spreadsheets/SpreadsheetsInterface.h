@@ -1,5 +1,6 @@
 #pragma once
 #include <fstream>
+#include "String.h"
 #include "IInterfacable.h"
 #include "Table.h"
 class SpreadsheetsInterface : public IInterfacable

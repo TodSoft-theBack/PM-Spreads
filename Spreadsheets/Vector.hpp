@@ -80,6 +80,13 @@ void Vector<T>::FreeMemberData()
 template<typename T>
 void Vector<T>::Resize(size_t size)
 {
+    if (size == 0)
+    {
+        collection = nullptr;
+        count = 0;
+        capacity = DEFAULT_CAPACITY;
+        return;
+    }
     capacity = size;
     T* newCollection = new T[capacity];
     for (size_t i = 0; i < count; i++)

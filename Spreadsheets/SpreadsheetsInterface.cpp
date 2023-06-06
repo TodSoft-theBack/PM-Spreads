@@ -15,7 +15,15 @@ void SpreadsheetsInterface::ExecuteCommand(const String& command, const Vector<S
 
 void SpreadsheetsInterface::Open(const Vector<String>& arguments)
 {
+	size_t argCount = arguments.Count();
+
+	if (argCount != 1)
+		throw std::runtime_error("No command with such arguments");
 	std::cout << "Executed on "  << arguments;
+
+	file.open(arguments[0].C_Str(), std::ios::in | std::ios::_Nocreate);
+	if (!file.is_open())
+		throw std::runtime_error("Invalid filename");
 }
 
 void SpreadsheetsInterface::Save(const Vector<String>& arguments)

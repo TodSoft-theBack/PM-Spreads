@@ -118,11 +118,18 @@ String::String()
 
 String::String(size_t capacity) : String()
 {
+	if (capacity == 0)
+		throw std::runtime_error("Capacity cannot be 0");
+
 	if (capacity <= SMALL_STRING_MAX_SIZE)
+	{
+		LengthByte() = SMALL_STRING_MAX_SIZE - capacity + 1;
 		return;
+	}
+
 	_data = new char[capacity];
 	_data[0] = '\0';
-	_length = 0;
+	_length = capacity - 1;
 	_capacity = capacity;
 }
 
@@ -228,7 +235,6 @@ String String::Substring(unsigned startIndex, size_t length) const
 		return String();
 
 	String result(length + 1);
-	result.SetLength(length);
 	for (size_t i = startIndex; i < len && i < startIndex + length; i++)
 		result[i - startIndex] = operator[](i);
 	result[length] = '\0';
@@ -242,7 +248,6 @@ String String::Substring(unsigned startIndex) const
 		throw std::runtime_error("Invalid index");
 
 	String result(resultLen + 1);
-	result.SetLength(resultLen);
 	for (size_t i = startIndex; i < len; i++)
 		result[i - startIndex] = operator[](i);
 	result[resultLen] = '\0';
@@ -284,18 +289,11 @@ String& String::operator+=(const String& rhs)
 	size_t thisLen = Length(), thatLen = rhs.Length();
 	size_t resultCapacity = thisLen + thatLen + 1;
 
-	if(IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE)
+	if(IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE || 
+	  !IsSmallString() && resultCapacity <= _capacity)
 	{
 		for (size_t i = 0; i <= thatLen; i++)
-			(*this)[thisLen + i] =  rhs[i];
-		return *this;
-	}
-
-	if (!IsSmallString() && resultCapacity <= _capacity)
-	{
-		for (size_t i = 0; i <= thatLen; i++)
-			_data[thisLen + i] = rhs[i];
-		_length = resultCapacity - 1;
+			operator[](thisLen + i) = rhs[i];
 		return *this;
 	}
 
@@ -303,7 +301,7 @@ String& String::operator+=(const String& rhs)
 	char* result = new char[_capacity];
 
 	for (size_t i = 0; i < thisLen; i++)
-		result[i] = (*this)[i];
+		result[i] = operator[](i);
 
 	for (size_t i = thisLen; i <= resultCapacity; i++)
 		result[i] = rhs[i - thisLen];
@@ -320,17 +318,10 @@ String& String::operator+=(char rhs)
 	size_t len = Length();
 	size_t resultCapacity = len + 2;
 
-	if (IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE)
+	if (IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE ||
+	   !IsSmallString() && resultCapacity <= _capacity)
 	{
-		SetLength(len + 1);
-		(*this)[len] = rhs;
-		return *this;
-	}
-
-	if (!IsSmallString() && resultCapacity <= _capacity)
-	{
-		_data[len] = rhs;
-		_length = resultCapacity - 1;
+		operator[](len) = rhs;	
 		return *this;
 	}
 
@@ -338,7 +329,7 @@ String& String::operator+=(char rhs)
 	char* result = new char[_capacity];
 
 	for (size_t i = 0; i < len; i++)
-		result[i] = (*this)[i];
+		result[i] = operator[](i);
 	result[len] = rhs;
 	delete[] _data;
 	_data = result;
@@ -349,7 +340,7 @@ String& String::operator+=(char rhs)
 char String::operator[](unsigned index) const 
 {
 	if (index > Length())
-		throw std::runtime_error("Index was outside the bounds of the collection");
+		throw std::runtime_error("Index was outside the string");
 
 	if(!IsSmallString())
 		return _data[index];
@@ -359,7 +350,7 @@ char String::operator[](unsigned index) const
 char& String::operator[](unsigned index)
 {
 	if (index > Length())
-		throw std::runtime_error("Index was outside the bounds of the collection");
+		throw std::runtime_error("Index was outside the string");
 
 	if (!IsSmallString())
 		return _data[index];
@@ -476,7 +467,6 @@ String String::Trim() const
 
 	size_t resultLen = endIndex + 1 - startIndex;
 	String result(resultLen + 1);
-	result.SetLength(resultLen);
 	for (unsigned i = startIndex; i <= endIndex; i++)
 		result[i - startIndex] = operator[](i);
 	result[resultLen] = '\0';
@@ -502,6 +492,37 @@ Vector<String> String::Split(char delim) const
 
 	if (delimIndex < len - 1)
 		result.PushBack(SubstringConst(delimIndex + 1).Trim());
+	return result;
+}
+
+size_t GetLength(size_t number)
+{
+	size_t length = 0;
+	while (number != 0)
+	{
+		number /= 10;
+		length++;
+	}
+	return number == 0 ? 1 : length;
+}
+
+char DigitToChar(byte number)
+{
+	if(number > 9)
+		throw std::runtime_error("Invalid digit");
+	return number + '0';
+}
+
+
+String String::NumericString(size_t number) 
+{
+	size_t length = GetLength(number);
+	String result(length + 1);
+
+	for (int i = length - 1; i >= 0; i--, number /= 10)
+		result[i] = DigitToChar(number % 10);
+
+	result[length] = '\0';
 	return result;
 }
 
