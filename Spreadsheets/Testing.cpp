@@ -9,5 +9,6 @@ int main()
 	app.SetExitCommand("Exit");
 	app.SetInterface(new SpreadsheetsInterface());
 	app.Run();
+
 	return EXIT_SUCCESS;
 }

@@ -51,31 +51,6 @@ byte& String::LengthByte()
 	return LastByteOf(_capacity);
 }
 
-void String::SetLength(size_t length)
-{
-	if (IsSmallString())
-		if (length < SMALL_STRING_MAX_SIZE)
-		{
-			LengthByte() = SMALL_STRING_MAX_SIZE - length;
-			return;
-		}
-		else
-		{
-			char* dynamicData = new char[length];
-			size_t len = Length();
-			for (size_t i = 0; i < len; i++)
-				dynamicData[i] = operator[](i);
-			_data = dynamicData;
-			_length = length;
-			_capacity = length + 1;
-			return;
-		}
-	
-
-	if (length < _capacity)
-		_length = length;
-}
-
 byte String::LastByteOf(size_t variable) const
 {
 	return ((byte*)&variable)[sizeof(variable) - 1];
@@ -113,23 +88,22 @@ char& String::CharAt(unsigned index)
 
 String::String()
 {
-	LengthByte() = SMALL_STRING_MAX_SIZE;
+	LengthByte() = (SMALL_STRING_MAX_SIZE - 1);
 }
 
-String::String(size_t capacity) : String()
+String::String(size_t length) : String()
 {
-	if (capacity == 0)
-		throw std::runtime_error("Capacity cannot be 0");
-
+	size_t capacity = length + 1;
 	if (capacity <= SMALL_STRING_MAX_SIZE)
 	{
-		LengthByte() = SMALL_STRING_MAX_SIZE - capacity + 1;
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - length;
+		CharAt(length) = '\0';
 		return;
 	}
 
 	_data = new char[capacity];
-	_data[0] = '\0';
-	_length = capacity - 1;
+	_data[length] = '\0';
+	_length = length;
 	_capacity = capacity;
 }
 
@@ -143,8 +117,7 @@ String::String(const char* data)
 	size_t capacity = strlen(data) + 1;
 	if(capacity <= SMALL_STRING_MAX_SIZE)
 	{
-		_capacity = 0;
-		LengthByte() = SMALL_STRING_MAX_SIZE - capacity;
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - capacity + 1;
 		for (size_t i = 0; i < capacity; i++)
 			CharAt(i) = data[i];
 		return;
@@ -154,35 +127,6 @@ String::String(const char* data)
 	strcpy(_data, data);
 	_length = capacity - 1;
 	_capacity = capacity;
-}
-
-String::String(std::istream& input)
-{
-	char buffer[1024] = {'\0'};
-	input.getline(buffer, 1024);
-
-	size_t len = strlen(buffer);
-
-	if (len == 0)
-	{
-		LengthByte() = SMALL_STRING_MAX_SIZE;
-		return;
-	}
-	size_t capacity = len + 1;
-	if (capacity <= SMALL_STRING_MAX_SIZE)
-	{
-		_capacity = 0;
-		LengthByte() = SMALL_STRING_MAX_SIZE - capacity;
-		for (size_t i = 0; i < capacity; i++)
-			CharAt(i) = buffer[i];
-		return;
-	}
-
-	_data = new char[capacity];
-	strcpy(_data, buffer);
-	_length = capacity - 1;
-	_capacity = capacity;
-	
 }
 
 String::String(const String& string)
@@ -199,8 +143,15 @@ String::String(String&& temptorary) noexcept
 size_t String::Length() const
 {
 	if(IsSmallString())
-		return SMALL_STRING_MAX_SIZE - LengthByte();
+		return (SMALL_STRING_MAX_SIZE - 1) - LengthByte();
 	return _length;
+}
+
+size_t String::Capacity() const
+{
+	if (IsSmallString())
+		return SMALL_STRING_MAX_SIZE;
+	return _capacity;
 }
 
 String::StringView String::SubStringView(unsigned startIndex, size_t length) const
@@ -289,26 +240,37 @@ String& String::operator+=(const String& rhs)
 	size_t thisLen = Length(), thatLen = rhs.Length();
 	size_t resultCapacity = thisLen + thatLen + 1;
 
-	if(IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE || 
-	  !IsSmallString() && resultCapacity <= _capacity)
+	if(IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE )
 	{
+		LengthByte() = SMALL_STRING_MAX_SIZE - resultCapacity;
 		for (size_t i = 0; i <= thatLen; i++)
 			operator[](thisLen + i) = rhs[i];
 		return *this;
 	}
 
-	_capacity = resultCapacity;
-	char* result = new char[_capacity];
+	if (!IsSmallString() && resultCapacity <= _capacity)
+	{
+
+		_length = resultCapacity - 1;
+		for (size_t i = 0; i <= thatLen; i++)
+			operator[](thisLen + i) = rhs[i];
+		return *this;
+	}
+
+	
+	char* result = new char[resultCapacity];
 
 	for (size_t i = 0; i < thisLen; i++)
 		result[i] = operator[](i);
 
-	for (size_t i = thisLen; i <= resultCapacity; i++)
+	for (size_t i = thisLen; i < resultCapacity; i++)
 		result[i] = rhs[i - thisLen];
 
-	delete[] _data;
+	if (!IsSmallString())
+		delete[] _data;
 	_data = result;
-	_length = _capacity - 1;
+	_length = resultCapacity - 1;
+	_capacity = resultCapacity;
 
 	return *this;
 }
@@ -339,9 +301,6 @@ String& String::operator+=(char rhs)
 
 char String::operator[](unsigned index) const 
 {
-	if (index > Length())
-		throw std::runtime_error("Index was outside the string");
-
 	if(!IsSmallString())
 		return _data[index];
 	return CharAt(index);
@@ -349,9 +308,6 @@ char String::operator[](unsigned index) const
 
 char& String::operator[](unsigned index)
 {
-	if (index > Length())
-		throw std::runtime_error("Index was outside the string");
-
 	if (!IsSmallString())
 		return _data[index];
 	return CharAt(index);
@@ -412,12 +368,9 @@ void String::Trim()
 {
 	size_t len = Length();
 	unsigned startIndex = 0, endIndex = len - 1;
-	for (unsigned i = 0; i < len; i++)
+	for (unsigned i = 0; i < len; i++, startIndex++)
 		if (operator[](i) != ' ')
-		{
-			startIndex = i;
 			break;
-		}
 
 	if (startIndex != 0)
 	{
@@ -440,7 +393,6 @@ void String::Trim()
 		operator[](len) = '\0';
 	}
 
-	SetLength(len);
 }
 
 String String::Trim() const
@@ -528,10 +480,12 @@ String String::NumericString(size_t number)
 
 String operator+(const String& lhs, const String& rhs)
 {
-	size_t thisLen = lhs.Length(), thatLen = rhs.Length();
-	String result(thisLen + thatLen + 1);
-	result += lhs;
-	result += rhs;
+	size_t thisLen = lhs.Length(), thatLen = rhs.Length(), totalLen = thisLen + thatLen;
+	String result(totalLen);
+	for (size_t i = 0; i < thisLen; i++)
+		result[i] = lhs[i];
+	for (size_t i = thisLen; i <= totalLen; i++)
+		result[i] = rhs[i - thisLen];
 	return result;
 }
 
@@ -611,4 +565,12 @@ bool operator<=(const String& lhs, const char* rhs)
 bool operator>=(const String& lhs, const char* rhs)
 {
 	return lhs == rhs || lhs > rhs;
+}
+
+std::istream& GetLine(std::istream& input, String& string, char delim)
+{
+	char buffer[1024];
+	input.getline(buffer, 1024, delim);
+	string = buffer;
+	return input;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <windows.h>
 #include<sstream>
 #include "String.h"
 #include "IInterfacable.h"

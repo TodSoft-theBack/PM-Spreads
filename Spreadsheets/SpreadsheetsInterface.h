@@ -18,7 +18,7 @@ class SpreadsheetsInterface : public IInterfacable
 	};
 
 	private:
-		Table table;    
+		Table table;
 		std::fstream file;
 
 	public:
@@ -28,5 +28,6 @@ class SpreadsheetsInterface : public IInterfacable
 		void Print(const Vector<String>& arguments);
 		void Close(const Vector<String>& arguments);
 		void Exit(const Vector<String>& arguments);
+		~SpreadsheetsInterface() = default;
 };
 

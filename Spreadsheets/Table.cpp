@@ -1,5 +1,11 @@
 #include "Table.h"
 
+Table::Table(std::istream& input)
+{
+	char buffer[64];
+	input.getline(buffer, 64);
+}
+
 Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
 {
 	for (size_t i = 0; i < rows; i++)

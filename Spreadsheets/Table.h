@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include "Cell.h"
 #include "Vector.hpp"
 
@@ -11,6 +12,7 @@ class Table
 
 	public:
 		Table() = default;
+		Table(std::istream& input);
 		Table(size_t rows, size_t columns);
 		size_t Rows() const;
 		size_t Columns() const;

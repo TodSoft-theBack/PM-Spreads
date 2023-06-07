@@ -1,6 +1,6 @@
 #include "SpreadsheetsInterface.h"
 
-const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save", "Close", "Exit" };
+const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save","Print", "Close", "Exit" };
 
 void SpreadsheetsInterface::ExecuteCommand(const String& command, const Vector<String>& arguments)
 {
@@ -19,11 +19,12 @@ void SpreadsheetsInterface::Open(const Vector<String>& arguments)
 
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments");
-	std::cout << "Executed on "  << arguments;
-
+	if (file.is_open())
+		file.close();
 	file.open(arguments[0].C_Str(), std::ios::in | std::ios::_Nocreate);
 	if (!file.is_open())
 		throw std::runtime_error("Invalid filename");
+	table = std::move(Table(file));
 }
 
 void SpreadsheetsInterface::Save(const Vector<String>& arguments)
@@ -38,10 +39,15 @@ void SpreadsheetsInterface::Print(const Vector<String>& arguments)
 
 void SpreadsheetsInterface::Close(const Vector<String>& arguments)
 {
-	std::cout << "Executed on " << arguments;
+	if (file.is_open())
+	{
+		std::cout << "Closing file!!";
+		file.close();
+	}
 }
 
 void SpreadsheetsInterface::Exit(const Vector<String>& arguments)
 {
+	file.close();
 	std::cout << "Executed on " << arguments;
 }

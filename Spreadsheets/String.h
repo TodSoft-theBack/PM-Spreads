@@ -27,22 +27,19 @@ class String
 		byte& LastByteOf(size_t& variable);
 		byte& LengthByte();
 
-		
-		void SetLength(size_t length);
-
 		// Only for small strings
 		char CharAt(unsigned index) const; 
 		char& CharAt(unsigned index);
 		
     public:
 	    String();
-		explicit String(size_t number);
+		explicit String(size_t length);
 	    String(const char* string);
-		String(std::istream& input);
 	    String(const String& string);
 		String(String&& temporary) noexcept;
 
 	    size_t Length() const;
+		size_t Capacity() const;
 		StringView SubStringView(unsigned startIndex, size_t length) const;
 		StringView SubStringView(unsigned startIndex) const;
 		String Substring(unsigned startIndex, size_t length) const;
@@ -67,6 +64,7 @@ class String
 		
 		friend String operator+(const String& lhs, const String& rhs);
 		friend std::istream& operator>>(std::istream& input, String& string);
+		
 	    ~String();
 };
 
@@ -85,3 +83,5 @@ bool operator<(const String& lhs, const char* rhs);
 bool operator>(const String& lhs, const char* rhs);
 bool operator<=(const String& lhs, const char* rhs);
 bool operator>=(const String& lhs, const char* rhs);
+
+std::istream& GetLine(std::istream& input, String& string, char delim = '\n');

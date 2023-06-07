@@ -26,14 +26,17 @@ void Application::SetInterface(IInterfacable* const interfacePointer)
 
 void Application::Run()
 {
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	std::cout << "Starting " << _applicationName <<"..." << std::endl;
 
 	String line;
 	String command;
 	do
 	{
+		SetConsoleTextAttribute(handle, 6);
 		std::cout << std::endl << "@" << _commandString << "> ";
-		line = String(std::cin);
+		SetConsoleTextAttribute(handle, 7);
+		GetLine(std::cin, line);
 		line.Trim();
 		if (line.Length() == 0)
 			continue;
@@ -45,7 +48,7 @@ void Application::Run()
 		else
 		{
 			command = std::move(line.SubstringConst(0, commandIndex).Trim());
-			arguments = line.SubstringConst(commandIndex + 1).Trim().Split();
+			arguments = line.SubstringConst(commandIndex + 1).Trim().Split(); 
 		}
 
 		if (command == _exitCommand)
@@ -58,9 +61,12 @@ void Application::Run()
 			}
 			catch (std::runtime_error error)
 			{
+				SetConsoleTextAttribute(handle, 4);
 				std::cout << error.what() << std::endl;
+				SetConsoleTextAttribute(handle, 7);
 			}
 	} while (true);
+
 	std::cout << std::endl << "Exiting " << _applicationName << "..." << std::endl;
 }
 
