@@ -131,12 +131,17 @@
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellFactory.cpp" />
     <ClCompile Include="DecimalCell.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FormulaCell.cpp" />
     <ClCompile Include="IInterfacable.cpp" />
     <ClCompile Include="IntegerCell.cpp" />
+    <ClCompile Include="Row.cpp" />
     <ClCompile Include="SpreadsheetsInterface.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="Table.cpp" />
+    <ClCompile Include="TableFile.cpp" />
+    <ClCompile Include="TableFileManager.cpp" />
     <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TextCell.cpp" />
   </ItemGroup>
@@ -145,12 +150,17 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellFactory.h" />
     <ClInclude Include="DecimalCell.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="FormulaCell.h" />
     <ClInclude Include="IInterfacable.h" />
     <ClInclude Include="IntegerCell.h" />
+    <ClInclude Include="Row.h" />
     <ClInclude Include="SpreadsheetsInterface.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TableFile.h" />
+    <ClInclude Include="TableFileManager.h" />
     <ClInclude Include="TextCell.h" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>

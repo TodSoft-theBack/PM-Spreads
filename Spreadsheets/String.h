@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
 #include "Vector.hpp"
+#include <iostream>
 typedef uint8_t byte;
 
 class String
@@ -35,6 +35,7 @@ class String
 	    String();
 		explicit String(size_t length);
 	    String(const char* string);
+		String(const Vector<char>& collection);
 	    String(const String& string);
 		String(String&& temporary) noexcept;
 
@@ -53,6 +54,7 @@ class String
 	    char operator[](unsigned index) const;
 		char& operator[](unsigned index);
 		const char* C_Str() const;
+		size_t CountChar(char symbol) const;
 		int IndexOf(char symbol, unsigned startIndex) const;
 		int IndexOf(char symbol) const;
 		int LastIndexOf(char symbol, unsigned startIndex) const; 
@@ -60,6 +62,8 @@ class String
 		void Trim();
 		String Trim() const;
 		Vector<String> Split(char delim = ' ') const;
+		size_t IntegerParse() const;
+		bool IsInteger() const;
 		static String NumericString(size_t number);
 		
 		friend String operator+(const String& lhs, const String& rhs);
@@ -84,4 +88,4 @@ bool operator>(const String& lhs, const char* rhs);
 bool operator<=(const String& lhs, const char* rhs);
 bool operator>=(const String& lhs, const char* rhs);
 
-std::istream& GetLine(std::istream& input, String& string, char delim = '\n');
+std::istream& ReadLine(std::istream& input, String& string, char delim = '\n');

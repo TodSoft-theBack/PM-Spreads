@@ -2,5 +2,5 @@
 
 Cell* CellFactory::CreateCell(const char* value)
 {
-    return nullptr;
+    return new TextCell(value);
 }

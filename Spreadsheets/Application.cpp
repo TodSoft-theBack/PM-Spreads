@@ -26,6 +26,7 @@ void Application::SetInterface(IInterfacable* const interfacePointer)
 
 void Application::Run()
 {
+	//Gets a pointer (handle) to the currently running console (works only on Windows)
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	std::cout << "Starting " << _applicationName <<"..." << std::endl;
 
@@ -36,7 +37,7 @@ void Application::Run()
 		SetConsoleTextAttribute(handle, 6);
 		std::cout << std::endl << "@" << _commandString << "> ";
 		SetConsoleTextAttribute(handle, 7);
-		GetLine(std::cin, line);
+		ReadLine(std::cin, line);
 		line.Trim();
 		if (line.Length() == 0)
 			continue;

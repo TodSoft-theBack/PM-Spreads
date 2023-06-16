@@ -1,6 +1,6 @@
 #include "SpreadsheetsInterface.h"
 
-const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save","Print", "Close", "Exit" };
+const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save","Print", "Edit", "Close" };
 
 void SpreadsheetsInterface::ExecuteCommand(const String& command, const Vector<String>& arguments)
 {
@@ -19,35 +19,56 @@ void SpreadsheetsInterface::Open(const Vector<String>& arguments)
 
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments");
-	if (file.is_open())
-		file.close();
-	file.open(arguments[0].C_Str(), std::ios::in | std::ios::_Nocreate);
-	if (!file.is_open())
-		throw std::runtime_error("Invalid filename");
-	table = std::move(Table(file));
+
+	fileManager->OpenFile(arguments[0].C_Str());
+	std::cout << (*fileManager)[arguments[0].C_Str()]->Filename();
 }
 
 void SpreadsheetsInterface::Save(const Vector<String>& arguments)
 {
+	size_t argCount = arguments.Count();
+	if (argCount == 1)
+	{
+		fileManager->Save(arguments[0].C_Str());
+		return;
+	}
+
+	if (argCount != 3)
+		throw std::runtime_error("No command with such arguments");
+
+	if (arguments[1] != "as")
+		throw std::runtime_error("No command with such arguments");
+	fileManager->SaveAs(arguments[0].C_Str(), arguments[2].C_Str());
 	std::cout << "Executed on " << arguments;
 }
 
 void SpreadsheetsInterface::Print(const Vector<String>& arguments)
 {
-	std::cout << "Executed on " << arguments;
+	fileManager->PrintFile(std::cout, arguments[0].C_Str());
+}
+
+void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
+{
+	size_t argCount = arguments.Count();
+	if (argCount != 4)
+		throw std::runtime_error("No command with such arguments");
+	if (!arguments[1].IsInteger() || !arguments[2].IsInteger())
+		throw std::runtime_error("Please provide valid row and columns!");
+
+	size_t row = arguments[1].IntegerParse(), column = arguments[2].IntegerParse();
+
+	fileManager->Edit(arguments[0].C_Str(), row, column, arguments[3].C_Str());
 }
 
 void SpreadsheetsInterface::Close(const Vector<String>& arguments)
 {
-	if (file.is_open())
-	{
-		std::cout << "Closing file!!";
-		file.close();
-	}
+	size_t argCount = arguments.Count();
+	if (argCount != 1)
+		throw std::runtime_error("No command with such arguments!");
+	fileManager->CloseFile(arguments[0].C_Str());
 }
 
-void SpreadsheetsInterface::Exit(const Vector<String>& arguments)
+SpreadsheetsInterface::~SpreadsheetsInterface() 
 {
-	file.close();
-	std::cout << "Executed on " << arguments;
+	delete fileManager;
 }

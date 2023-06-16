@@ -30,7 +30,7 @@ class Vector
         std::stringstream ToString() const;
 
         const Vector<T>& operator=(const Vector<T>& vector);
-        const Vector<T>& operator=(Vector<T>&& vector);
+        const Vector<T>& operator=(Vector<T>&& vector) noexcept;
         const T& operator[] (unsigned index) const;
         T& operator[] (unsigned index);
 
@@ -90,7 +90,7 @@ void Vector<T>::Resize(size_t size)
     capacity = size;
     T* newCollection = new T[capacity];
     for (size_t i = 0; i < count; i++)
-        newCollection[i] = collection[i];                
+        newCollection[i] = std::move(collection[i]);                
     FreeMemberData();
     collection = newCollection;
 }
@@ -183,7 +183,7 @@ const Vector<T>& Vector<T>::operator=(const Vector<T>& vector)
 }
 
 template<typename T>
-const Vector<T>& Vector<T>::operator=(Vector<T>&& vector)
+const Vector<T>& Vector<T>::operator=(Vector<T>&& vector) noexcept
 {
     if (this != &vector)
     {

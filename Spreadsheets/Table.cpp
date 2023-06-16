@@ -1,20 +1,10 @@
 #include "Table.h"
 
-Table::Table(std::istream& input)
-{
-	char buffer[64];
-	input.getline(buffer, 64);
-}
-
 Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
 {
+	container = std::move(Vector<Row>(_rows));
 	for (size_t i = 0; i < rows; i++)
-	{
-		container.PushBack(std::move(Vector<Cell*>(columns)));
-		for (size_t j = 0; j < columns; j++)
-			container[i].PushBack(std::move(nullptr));
-	}
-
+		container.PushBack(std::move(Row(_columns)));
 }
 
 size_t Table::Rows() const
@@ -27,19 +17,14 @@ size_t Table::Columns() const
     return _columns;
 }
 
-void Table::AppendRow(const Vector<Cell*>& row)
+const Row& Table::operator[](unsigned index) const
 {
-	container.PushBack(row);
+	return container[index];
 }
 
-void Table::AppendRow(Vector<Cell*>&& row)
+Row& Table::operator[](unsigned index)
 {
-	container.PushBack(std::move(row));
-}
-
-const Cell* Table::CellAt(unsigned row, unsigned column) const
-{
-	return container[row][column];
+	return container[index];
 }
 
 std::ostream& operator<<(std::ostream& output, const Table& table)
@@ -48,7 +33,7 @@ std::ostream& operator<<(std::ostream& output, const Table& table)
 	{
 		output << "| ";
 		for (size_t j = 0; j < table._columns; j++)
-			output << table.container[i][j] << (j != table._columns - 1 ? " | " : "");
+			output << table.container[i][j]->ToString() << (j != table._columns - 1 ? " | " : "");
 		output << " |" << std::endl;
 	}
 	return output;

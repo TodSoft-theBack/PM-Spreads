@@ -1,8 +1,11 @@
 #pragma once
 #include <fstream>
-#include "String.h"
 #include "IInterfacable.h"
+#include "String.h"
 #include "Table.h"
+#include "FileManager.h"
+#include "TableFileManager.h"
+
 class SpreadsheetsInterface : public IInterfacable
 {
 	static const size_t COMMANDS_COUNT = 6;
@@ -13,21 +16,20 @@ class SpreadsheetsInterface : public IInterfacable
 		&SpreadsheetsInterface::Open,
 		&SpreadsheetsInterface::Save,
 		&SpreadsheetsInterface::Print,
-		&SpreadsheetsInterface::Close,
-		&SpreadsheetsInterface::Exit,
+		&SpreadsheetsInterface::Edit,
+		&SpreadsheetsInterface::Close
 	};
 
 	private:
-		Table table;
-		std::fstream file;
+		FileManager* fileManager = new TableFileManager();
 
 	public:
 		void ExecuteCommand(const String& command, const Vector<String>& arguments) override;
 		void Open(const Vector<String>& arguments);
 		void Save(const Vector<String>& arguments);
 		void Print(const Vector<String>& arguments);
+		void Edit(const Vector<String>& arguments);
 		void Close(const Vector<String>& arguments);
-		void Exit(const Vector<String>& arguments);
-		~SpreadsheetsInterface() = default;
+		~SpreadsheetsInterface();
 };
 

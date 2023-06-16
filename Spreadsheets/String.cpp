@@ -129,6 +129,27 @@ String::String(const char* data)
 	_capacity = capacity;
 }
 
+String::String(const Vector<char>& collection)
+{
+	size_t len = collection.Count();
+	size_t capacity = len + 1;
+	if (capacity <= SMALL_STRING_MAX_SIZE)
+	{
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - capacity + 1;
+		for (size_t i = 0; i < len; i++)
+			CharAt(i) = collection[i];
+		CharAt(len) = '\0';
+		return;
+	}
+
+	_data = new char[capacity];
+	for (size_t i = 0; i < len; i++)
+		_data[i] = collection[i];
+	_data[len] = '\0';
+	_length = capacity - 1;
+	_capacity = capacity;
+}
+
 String::String(const String& string)
 {
 	CopyMemberData(string);
@@ -185,7 +206,7 @@ String String::Substring(unsigned startIndex, size_t length) const
 	if (length == 0)
 		return String();
 
-	String result(length + 1);
+	String result(length);
 	for (size_t i = startIndex; i < len && i < startIndex + length; i++)
 		result[i - startIndex] = operator[](i);
 	result[length] = '\0';
@@ -198,7 +219,7 @@ String String::Substring(unsigned startIndex) const
 	if (startIndex >= len)
 		throw std::runtime_error("Invalid index");
 
-	String result(resultLen + 1);
+	String result(resultLen);
 	for (size_t i = startIndex; i < len; i++)
 		result[i - startIndex] = operator[](i);
 	result[resultLen] = '\0';
@@ -320,6 +341,15 @@ const char* String::C_Str() const
 	return (char*)this;
 }
 
+size_t String::CountChar(char symbol) const
+{
+	size_t count = 0, length = Length();
+	for (size_t i = 0; i < length; i++)
+		if (operator[](i) == symbol)
+			count++;
+	return count;
+}
+
 int String::IndexOf(char symbol, unsigned startIndex) const
 {
 	int index = -1;
@@ -428,22 +458,73 @@ String String::Trim() const
 Vector<String> String::Split(char delim) const
 {
 	Vector<String> result;
+	Vector<char> string;
 	size_t len = Length();
 	
 	int delimIndex = -1;
+	bool collecting = true;
 	for (size_t i = 0; i < len; i++)
 	{
-		if (operator[](i) == delim)
+		char currentChar = operator[](i);
+		if (currentChar == delim)
 		{
-			result.PushBack(SubstringConst(delimIndex + 1, i - delimIndex).Trim());
 			delimIndex = i;
+			if (collecting)
+			{
+				result.PushBack(string);
+				string = std::move(Vector<char>());
+				collecting = false;
+			}		
 		}
+		if (currentChar != delim)
+			collecting = true;
+		if (collecting)
+			string.PushBack(currentChar);
 	}
 	if (delimIndex == -1)
 		result.PushBack(*this);
 
 	if (delimIndex < len - 1)
 		result.PushBack(SubstringConst(delimIndex + 1).Trim());
+	return result;
+}
+
+bool IsAllowedInInteger(char symbol, unsigned index) 
+{
+	if (symbol >= '0' && symbol <= '9')
+		return true;
+	if (symbol == '+' || symbol == '-')
+		return index == 0;
+	return false;
+}
+
+bool IsAllowedInDecimal(char symbol, unsigned index)
+{
+	if (symbol >= '0' && symbol <= '9')
+		return true;
+	if (symbol == '+' || symbol == '-')
+		return index == 0;
+	if (symbol == '.' || symbol == ',')
+		return true;
+	return false;
+}
+
+bool String::IsInteger() const
+{
+	size_t length = Length();
+	for (size_t i = 0; i < length; i++)
+	{
+		char current = operator[](i);
+		if (!IsAllowedInInteger(current, i))
+			return false;
+	}
+	return true;
+}
+
+size_t String::IntegerParse() const
+{
+	size_t result = 0;
+
 	return result;
 }
 
@@ -465,8 +546,7 @@ char DigitToChar(byte number)
 	return number + '0';
 }
 
-
-String String::NumericString(size_t number) 
+String String::NumericString(size_t number)
 {
 	size_t length = GetLength(number);
 	String result(length + 1);
@@ -567,7 +647,7 @@ bool operator>=(const String& lhs, const char* rhs)
 	return lhs == rhs || lhs > rhs;
 }
 
-std::istream& GetLine(std::istream& input, String& string, char delim)
+std::istream& ReadLine(std::istream& input, String& string, char delim)
 {
 	char buffer[1024];
 	input.getline(buffer, 1024, delim);
