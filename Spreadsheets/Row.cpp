@@ -88,6 +88,14 @@ Row& Row::operator=(Row&& row) noexcept
 	return *this;
 }
 
+Vector<std::unique_ptr<Cell>> Row::Collection() const
+{
+	Vector<std::unique_ptr<Cell>> vector;
+	for (size_t i = 0; i < _count; i++)
+		vector.PushBack(std::move(std::unique_ptr<Cell>(container[i]->Clone())));
+	return vector;
+}
+
 const Cell* Row::operator[](unsigned index) const
 {
 	return container[index];

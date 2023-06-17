@@ -26,6 +26,7 @@ class Row
 		Row(Row&& temporary) noexcept;
 		Row& operator=(const Row& row);
 		Row& operator=(Row&& row) noexcept;
+		Vector<std::unique_ptr<Cell>> Collection() const;
 		const Cell* operator[](unsigned index) const;
 		Cell*& operator[](unsigned index);
 		~Row();

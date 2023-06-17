@@ -34,7 +34,7 @@ void TableFile::SaveAs(const char* filename)
 	for (size_t row = 0; row < rows; row++)
 	{
 		for (size_t column = 0; column < columns; column++)
-			stream << table[row][column]->ToString() << (column < columns - 1 ? ", " : "");
+			stream << table[row][column]->ToString(table.Collection()) << (column < columns - 1 ? ", " : "");
 		stream << std::endl;
 	}
 	stream.close();

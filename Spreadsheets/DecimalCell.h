@@ -12,7 +12,7 @@ class DecimalCell : public Cell
 		DecimalCell() = default;
 		DecimalCell(const String& string);
 		Cell* Clone() const override;
-		String ToString() const override;
+		String ToString(const Vector<Vector<std::unique_ptr<Cell>>>& reference) const override;
 		~DecimalCell() = default;
 };
 

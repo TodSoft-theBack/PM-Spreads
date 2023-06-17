@@ -18,6 +18,14 @@ size_t Table::Columns() const
     return _columns;
 }
 
+Vector<Vector<std::unique_ptr<Cell>>> Table::Collection() const
+{
+	Vector<Vector<std::unique_ptr<Cell>>> vector;
+	for (size_t i = 0; i < _rows; i++)
+		vector.PushBack(std::move(container[i].Collection()));
+	return vector;
+}
+
 const Row& Table::operator[](unsigned index) const
 {
 	return container[index];
@@ -34,7 +42,7 @@ std::ostream& operator<<(std::ostream& output, const Table& table)
 	{
 		output << "| ";
 		for (size_t j = 0; j < table._columns; j++)
-			output << table.container[i][j]->ToString() << (j != table._columns - 1 ? " | " : "");
+			output << table.container[i][j]->ToString(table.Collection()) << (j != table._columns - 1 ? " | " : "");
 		output << " |" << std::endl;
 	}
 	return output;
