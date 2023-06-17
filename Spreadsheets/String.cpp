@@ -425,32 +425,32 @@ void String::Trim()
 
 }
 
-String String::Trim() const
+String String::Trim(const String& string)
 {
-	size_t len = Length();
-	unsigned startIndex = 0, endIndex = len - 1;
+	size_t length = string.Length();
+	unsigned startIndex = 0, endIndex = length - 1;
 
-	for (size_t i = 0; i < len; i++)
-		if (operator[](i) != ' ')
+	for (size_t i = 0; i < length; i++)
+		if (string[i] != ' ')
 		{
 			startIndex = i;
 			break;
 		}
 
-	for (long i = len - 1; i >= 0; i--)
-		if (operator[](i) != ' ')
+	for (long i = length - 1; i >= 0; i--)
+		if (string[i] != ' ')
 		{
 			endIndex = i;
 			break;
 		}
 
-	if (startIndex == 0 && endIndex == len - 1)
-		return *this;
+	if (startIndex == 0 && endIndex == length - 1)
+		return string;
 
 	size_t resultLen = endIndex + 1 - startIndex;
 	String result(resultLen + 1);
 	for (unsigned i = startIndex; i <= endIndex; i++)
-		result[i - startIndex] = operator[](i);
+		result[i - startIndex] = string[i];
 	result[resultLen] = '\0';
 	return result;
 }
@@ -485,27 +485,29 @@ Vector<String> String::Split(char delim) const
 		result.PushBack(*this);
 
 	if (delimIndex < len - 1)
-		result.PushBack(SubstringConst(delimIndex + 1).Trim());
+		result.PushBack(String::Trim(SubstringConst(delimIndex + 1)));
 	return result;
 }
 
-bool IsAllowedInInteger(char symbol, unsigned index) 
+
+bool IsDigit(char symbol)
 {
 	if (symbol >= '0' && symbol <= '9')
 		return true;
-	if (symbol == '+' || symbol == '-')
-		return index == 0;
 	return false;
 }
 
-bool IsAllowedInDecimal(char symbol, unsigned index)
+size_t CharToDigit(char symbol)
 {
-	if (symbol >= '0' && symbol <= '9')
+	return symbol - '0';
+}
+
+bool IsAllowedInInteger(char symbol, unsigned index)
+{
+	if (IsDigit(symbol))
 		return true;
 	if (symbol == '+' || symbol == '-')
 		return index == 0;
-	if (symbol == '.' || symbol == ',')
-		return true;
 	return false;
 }
 
@@ -523,9 +525,41 @@ bool String::IsInteger() const
 
 size_t String::IntegerParse() const
 {
-	size_t result = 0;
-
+	size_t result = 0, length = Length();
+	char  current = operator[](0);
+	if (IsDigit(current))
+		result += CharToDigit(current);
+	for (size_t i = 1; i < length; i++)
+		result += CharToDigit(current);
 	return result;
+}
+
+bool IsAllowedInDecimal(char symbol, size_t& decimalsCounter, unsigned index)
+{
+	if (IsDigit(symbol))
+		return true;
+	if (symbol == '+' || symbol == '-')
+		return index == 0;
+	if (symbol == '.' || symbol == ',')
+		return decimalsCounter++ <= 1;
+	return false;
+}
+
+bool String::IsDecimal() const
+{
+	size_t length = Length(), decimalsCounter = 0;
+	for (size_t i = 0; i < length; i++)
+	{
+		char current = operator[](i);
+		if (!IsAllowedInDecimal(current, decimalsCounter, i))
+			return false;
+	}
+	return true;
+}
+
+size_t String::DecimalParse() const
+{
+	return size_t();
 }
 
 size_t GetLength(size_t number)
@@ -556,6 +590,16 @@ String String::NumericString(size_t number)
 
 	result[length] = '\0';
 	return result;
+}
+
+String String::NumericString(int number)
+{
+	return String();
+}
+
+String String::NumericString(double number)
+{
+	return String();
 }
 
 String operator+(const String& lhs, const String& rhs)

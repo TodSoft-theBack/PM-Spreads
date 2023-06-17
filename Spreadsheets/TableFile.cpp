@@ -25,6 +25,21 @@ void TableFile::EditAtPos(unsigned row, unsigned column, const char* newValue)
 	table[row][column] = CellFactory::CreateCell(newValue);
 }
 
+void TableFile::SaveAs(const char* filename)
+{
+	if (stream.is_open())
+		stream.close();
+	stream.open(filename, std::ios::out);
+	size_t rows = table.Rows(), columns = table.Columns();
+	for (size_t row = 0; row < rows; row++)
+	{
+		for (size_t column = 0; column < columns; column++)
+			stream << table[row][column]->ToString() << (column < columns - 1 ? ", " : "");
+		stream << std::endl;
+	}
+	stream.close();
+}
+
 std::ostream& TableFile::Print(std::ostream& output) const
 {
 	return output << table;

@@ -6,7 +6,7 @@ typedef uint8_t byte;
 class String
 {
 	public:
-		static const byte SMALL_STRING_MAX_SIZE = sizeof(size_t) + sizeof(char*) + sizeof(size_t); 
+		static const byte SMALL_STRING_MAX_SIZE = sizeof(size_t) + sizeof(char*) + sizeof(size_t) - 1; 
 		struct StringView
 		{
 			const char* data;
@@ -60,11 +60,15 @@ class String
 		int LastIndexOf(char symbol, unsigned startIndex) const; 
 		int LastIndexOf(char symbol) const;
 		void Trim();
-		String Trim() const;
-		Vector<String> Split(char delim = ' ') const;
-		size_t IntegerParse() const;
+		static String Trim(const String& string);
+		Vector<String> Split(char delim = ' ') const;	
 		bool IsInteger() const;
+		size_t IntegerParse() const;
+		bool IsDecimal() const;
+		size_t DecimalParse() const;
 		static String NumericString(size_t number);
+		static String NumericString(int number);
+		static String NumericString(double number);
 		
 		friend String operator+(const String& lhs, const String& rhs);
 		friend std::istream& operator>>(std::istream& input, String& string);

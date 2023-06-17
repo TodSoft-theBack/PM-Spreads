@@ -48,8 +48,8 @@ void Application::Run()
 			command = line;
 		else
 		{
-			command = std::move(line.SubstringConst(0, commandIndex).Trim());
-			arguments = line.SubstringConst(commandIndex + 1).Trim().Split(); 
+			command = std::move(String::Trim(line.SubstringConst(0, commandIndex)));
+			arguments = String::Trim(line.SubstringConst(commandIndex + 1)).Split();
 		}
 
 		if (command == _exitCommand)

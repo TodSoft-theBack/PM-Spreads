@@ -2,10 +2,15 @@
 
 File::File(const char* path) : filename(path)
 {
-    stream.open(path, std::ios::in | std::ios::out | std::ios::_Nocreate | std::ios::_Noreplace);
+    stream.open(path, std::ios::in | std::ios::_Nocreate);
 }
 
 const std::fstream& File::Stream() const
+{
+    return stream;
+}
+
+std::fstream& File::Stream()
 {
     return stream;
 }
@@ -16,11 +21,6 @@ const String& File::Filename() const
 }
 
 const bool& File::HasChanged() const
-{
-    return hasChanged;
-}
-
-bool& File::HasChanged()
 {
     return hasChanged;
 }
@@ -55,6 +55,8 @@ std::ostream& File::Print(std::ostream& output) const
 
 void File::EditAtPos(unsigned lineIndex, unsigned rowPos, const char* newValue)
 {
+    if (!hasChanged)
+        hasChanged = true;
     size_t originalPos = stream.tellg();
     size_t lineCount = CountLines();
     stream.seekg(0, std::ios::end);

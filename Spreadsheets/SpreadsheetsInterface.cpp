@@ -19,9 +19,7 @@ void SpreadsheetsInterface::Open(const Vector<String>& arguments)
 
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments");
-
 	fileManager->OpenFile(arguments[0].C_Str());
-	std::cout << (*fileManager)[arguments[0].C_Str()]->Filename();
 }
 
 void SpreadsheetsInterface::Save(const Vector<String>& arguments)

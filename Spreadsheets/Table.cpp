@@ -1,5 +1,6 @@
 #include "Table.h"
 
+
 Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
 {
 	container = std::move(Vector<Row>(_rows));

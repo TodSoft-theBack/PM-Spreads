@@ -1,5 +1,6 @@
 #include "Row.h"
 
+
 Row Row::ParseLine(const String& line, size_t columnCount)
 {
 	Vector<String> values = line.Split(',');
@@ -8,7 +9,7 @@ Row Row::ParseLine(const String& line, size_t columnCount)
 		throw std::runtime_error("Invalud format");
 	Row result(count);
 	for (size_t i = 0; i < count; i++)
-		result[i] = CellFactory::CreateCell(values[i].C_Str());	
+		result[i] = CellFactory::CreateCell(String::Trim(values[i]).C_Str());
 	return result;
 }
 

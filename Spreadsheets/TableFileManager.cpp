@@ -30,11 +30,13 @@ void TableFileManager::Edit(const char* filepath, unsigned row, unsigned column,
 void TableFileManager::Save(const char* filepath)
 {
 	File* file = operator[](filepath);
+	file->SaveAs(filepath);
 }
 
 void TableFileManager::SaveAs(const char* originalfilePath, const char* newFilePath)
 {
 	File* file = operator[](originalfilePath);
+	file->SaveAs(newFilePath);
 }
 
 void TableFileManager::CloseFile(const char* filepath)

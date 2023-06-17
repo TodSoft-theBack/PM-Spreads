@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "String.h"
 
 class Cell
