@@ -179,9 +179,6 @@
     <ClInclude Include="DecimalResult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ValueFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ReferenceParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>

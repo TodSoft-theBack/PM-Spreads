@@ -183,7 +183,6 @@
     <ClInclude Include="UnaryOperation.h" />
     <ClInclude Include="UniquePtr.hpp" />
     <ClInclude Include="ValueExpression.h" />
-    <ClInclude Include="ValueFactory.h" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>

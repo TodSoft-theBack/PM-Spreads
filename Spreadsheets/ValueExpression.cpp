@@ -1,4 +1,6 @@
 #include "ValueExpression.h"
+#include "IntegerResult.h"
+#include "DecimalResult.h"
 
 ValueExpression::ValueExpression(const String& value)
 {

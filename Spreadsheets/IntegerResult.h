@@ -1,5 +1,8 @@
 #pragma once
 #include "ExpressionResult.h"
+#include "DecimalResult.h"
+#include "String.h"
+class DecimalResult;
 
 class IntegerResult : public ExpressionResult
 {
@@ -10,7 +13,7 @@ class IntegerResult : public ExpressionResult
 
 		IntegerResult(int value);
 		int Value() const;
-		String Result() const override;
+		String GetResult() const override;
 
 		ExpressionResult* Plus() override;
 		ExpressionResult* Minus() override;

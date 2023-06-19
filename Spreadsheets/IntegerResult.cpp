@@ -10,7 +10,7 @@ int IntegerResult::Value() const
 	return value;
 }
 
-String IntegerResult::Result() const
+String IntegerResult::GetResult() const
 {
 	return String::NumericString(value);
 }

@@ -1,11 +1,11 @@
 #pragma once
-#include "IntegerResult.h"
-#include "DecimalResult.h"
+class IntegerResult;
+class DecimalResult;
 
 class ExpressionResult
 {
 	public:
-		virtual String Result() const = 0;
+		virtual String GetResult() const = 0;
 		virtual ExpressionResult* Plus() = 0;
 		virtual ExpressionResult* Minus() = 0;
 
@@ -24,4 +24,3 @@ class ExpressionResult
 		virtual ExpressionResult* Divide(DecimalResult* right) = 0;
 		virtual ExpressionResult* Power(DecimalResult* right) = 0;
 };
-

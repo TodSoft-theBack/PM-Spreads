@@ -10,7 +10,7 @@ double DecimalResult::Value() const
     return value;
 }
 
-String DecimalResult::Result() const
+String DecimalResult::GetResult() const
 {
     return String::NumericString(value);
 }
