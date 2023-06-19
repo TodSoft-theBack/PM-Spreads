@@ -1,15 +1,15 @@
 #include "Row.h"
 
 
-Row Row::ParseLine(const String& line, size_t columnCount)
+Row Row::ParseLine(const String& line)
 {
+	if (line.Length() == 0)
+		return Row();
 	Vector<String> values = line.Split(',');
 	size_t count = values.Count();
-	if (count != columnCount)
-		throw std::runtime_error("Invalud format");
 	Row result(count);
 	for (size_t i = 0; i < count; i++)
-		result[i] = CellFactory::CreateCell(String::Trim(values[i]).C_Str());
+		result.AddCell(CellFactory::CreateCell(String::Trim(values[i]).C_Str()));
 	return result;
 }
 
@@ -43,8 +43,11 @@ void Row::Resize(size_t size)
 	_capacity = size;
 	Cell** newContainer = new Cell* [_capacity];
 	for (size_t i = 0; i < _count; i++)
+	{
 		newContainer[i] = container[i]->Clone();
-	FreeMemberData();
+		delete container[i];
+	}
+	delete[] container;
 	container = newContainer;
 }
 
@@ -66,6 +69,18 @@ Row::Row(const Row& copy)
 Row::Row(Row&& temporary) noexcept
 {
 	MoveMemberData(std::move(temporary));
+}
+
+size_t Row::Size() const
+{
+	return _count;
+}
+
+void Row::AddCell(Cell* cell)
+{
+	if (_count == _capacity)
+		Resize(2 * _capacity);
+	container[_count++] = cell;
 }
 
 Row& Row::operator=(const Row& row)

@@ -4,14 +4,11 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 {
 	size_t lines = CountLines();
 	String line;
-	ReadLine(stream, line);
-	size_t columns = line.CountChar(',') + 1;
-	table = std::move(Table(lines, columns));
-	table[0] = std::move(Row::ParseLine(line, columns));
-	for (size_t i = 1; i < lines; i++)
+	table = Table(lines);
+	for (size_t i = 0; i < lines; i++)
 	{
 		ReadLine(stream, line);
-		table[i] = Row::ParseLine(line, columns);
+		table.AddRow(std::move(Row::ParseLine(line)));
 	}
 }
 

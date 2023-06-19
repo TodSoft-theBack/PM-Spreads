@@ -1,5 +1,6 @@
 #include "FormulaCell.h"
 #include "ExpressionParser.h"
+#include "ReferenceParser.h"
 
 FormulaCell::FormulaCell(const String& string) : value(string){}
 
@@ -10,7 +11,10 @@ Cell* FormulaCell::Clone() const
 
 String FormulaCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
-	String replacedReferences;
-	ExpressionResult* result = ExpressionParser::ParseExpression(replacedReferences.GetStringView())->Evaluate();
-	return String();
+	return ExpressionParser::ParseExpression
+	(
+		ReferenceParser::SubstituteTalbeReferences(value, reference).SubstringView(1)
+	)
+	->Evaluate()
+	->GetResult();
 }

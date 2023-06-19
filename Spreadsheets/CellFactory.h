@@ -5,6 +5,6 @@
 class CellFactory
 {
 	public:
-		static Cell* CreateCell(const char* value);
+		static Cell* CreateCell(const String& value);
 };
 

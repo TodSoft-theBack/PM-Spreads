@@ -15,6 +15,7 @@ class UniquePtr
 		UniquePtr& operator=(UniquePtr&& pointer);
 		T* Value() const;
 		T* operator->();
+		const T* operator->() const;
 		T operator*();
 		~UniquePtr();
 };
@@ -22,7 +23,13 @@ class UniquePtr
 template<typename T>
 T* UniquePtr<T>::operator->()
 {
-	return this;
+	return this->ptr;
+}
+
+template<typename T>
+const T* UniquePtr<T>::operator->() const
+{
+	return this->ptr;
 }
 
 template<typename T>

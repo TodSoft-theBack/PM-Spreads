@@ -1,11 +1,9 @@
 #include "Table.h"
 
 
-Table::Table(size_t rows, size_t columns) : _rows(rows), _columns(columns)
+Table::Table(size_t rows) : _rows(rows)
 {
 	container = std::move(Vector<Row>(_rows));
-	for (size_t i = 0; i < rows; i++)
-		container.PushBack(std::move(Row(_columns)));
 }
 
 size_t Table::Rows() const
@@ -24,6 +22,20 @@ Vector<Vector<UniquePtr<Cell>>> Table::Collection() const
 	for (size_t i = 0; i < _rows; i++)
 		vector.PushBack(std::move(container[i].Collection()));
 	return vector;
+}
+
+void Table::AddRow(const Row& row)
+{
+	if (row.Size() > _columns)
+		_columns = row.Size();
+	container.PushBack(row);
+}
+
+void Table::AddRow(Row&& row)
+{
+	if (row.Size() > _columns)
+		_columns = row.Size();
+	container.PushBack(std::move(row));
 }
 
 const Row& Table::operator[](unsigned index) const

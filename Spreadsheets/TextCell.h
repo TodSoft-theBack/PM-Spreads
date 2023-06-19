@@ -8,7 +8,7 @@ class TextCell : public Cell
 		String value;
 	public:
 		TextCell() = default;
-		TextCell(const char* value);
+		TextCell(const String& value);
 		Cell* Clone() const override;
 		String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const override;
 		~TextCell() = default;

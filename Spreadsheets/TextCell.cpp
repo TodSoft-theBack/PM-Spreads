@@ -1,6 +1,6 @@
 #include "TextCell.h"
 
-TextCell::TextCell(const char* value) : value(value)
+TextCell::TextCell(const String& value) : value(value)
 {
 }
 

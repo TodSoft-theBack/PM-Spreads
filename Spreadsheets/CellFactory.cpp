@@ -4,10 +4,9 @@
 #include "DecimalCell.h"
 #include "FormulaCell.h"
 
-Cell* CellFactory::CreateCell(const char* value)
+Cell* CellFactory::CreateCell(const String& value)
 {
-    String parser = value;
-    parser.Trim();
+    String parser = String::Trim(value);
     if (parser.IsInteger())
         return new IntegerCell(parser);
     else if (parser.IsDecimal())

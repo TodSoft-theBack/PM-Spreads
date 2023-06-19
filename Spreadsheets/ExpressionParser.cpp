@@ -1,7 +1,7 @@
 #include "ExpressionParser.h"
 #include "BinaryExpression.h"
 #include "UnaryExpression.h"
-#include "ValueFactory.h"
+#include "ValueExpression.h"
 
 
 bool IsOperation(char symbol)
@@ -16,7 +16,7 @@ Expression* ExpressionParser::ParseExpression(const String::StringView& expressi
 	Vector<char> operand;
 	bool hasDecimal = false, IsInsubExpression = false;
 	if (expression.length == 0)
-		return new UnaryExpression(ValueFactory::CreateValue(String(operand)));
+		return new ValueExpression(operand);
 
 	for (size_t i = 0; i < length; i++)
 	{
