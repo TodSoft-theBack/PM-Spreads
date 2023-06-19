@@ -26,7 +26,7 @@ void Application::SetInterface(IInterfacable* const interfacePointer)
 
 void Application::Run()
 {
-	//Gets a pointer (handle) to the currently running console (works only on Windows)
+	//Gets a void* (handle) to the currently running console (works only on Windows)
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	std::cout << "Starting " << _applicationName <<"..." << std::endl;
 

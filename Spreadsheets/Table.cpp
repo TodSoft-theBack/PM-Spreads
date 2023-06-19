@@ -18,9 +18,9 @@ size_t Table::Columns() const
     return _columns;
 }
 
-Vector<Vector<std::unique_ptr<Cell>>> Table::Collection() const
+Vector<Vector<UniquePtr<Cell>>> Table::Collection() const
 {
-	Vector<Vector<std::unique_ptr<Cell>>> vector;
+	Vector<Vector<UniquePtr<Cell>>> vector;
 	for (size_t i = 0; i < _rows; i++)
 		vector.PushBack(std::move(container[i].Collection()));
 	return vector;

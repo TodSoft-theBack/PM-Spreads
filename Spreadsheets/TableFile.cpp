@@ -7,7 +7,7 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 	ReadLine(stream, line);
 	size_t columns = line.CountChar(',') + 1;
 	table = std::move(Table(lines, columns));
-	table[0] = Row::ParseLine(line, columns);
+	table[0] = std::move(Row::ParseLine(line, columns));
 	for (size_t i = 1; i < lines; i++)
 	{
 		ReadLine(stream, line);

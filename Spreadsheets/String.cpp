@@ -135,7 +135,7 @@ String::String(const Vector<char>& collection)
 	size_t capacity = len + 1;
 	if (capacity <= SMALL_STRING_MAX_SIZE)
 	{
-		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - capacity + 1;
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - len;
 		for (size_t i = 0; i < len; i++)
 			CharAt(i) = collection[i];
 		CharAt(len) = '\0';
@@ -175,7 +175,7 @@ size_t String::Capacity() const
 	return _capacity;
 }
 
-String::StringView String::SubStringView(unsigned startIndex, size_t length) const
+String::StringView String::SubstringView(unsigned startIndex, size_t length) const
 {
 	size_t len = Length();
 	if (startIndex >= len)
@@ -186,7 +186,7 @@ String::StringView String::SubStringView(unsigned startIndex, size_t length) con
 	return view;
 }
 
-String::StringView String::SubStringView(unsigned startIndex) const
+String::StringView String::SubstringView(unsigned startIndex) const
 {
 	size_t len = Length();
 	if (startIndex >= len)
@@ -332,6 +332,14 @@ char& String::operator[](unsigned index)
 	if (!IsSmallString())
 		return _data[index];
 	return CharAt(index);
+}
+
+String::StringView String::GetStringView() const
+{
+	StringView view;
+	view.data = C_Str();
+	view.length = Length();
+	return view;
 }
 
 const char* String::C_Str() const
@@ -490,21 +498,21 @@ Vector<String> String::Split(char delim) const
 }
 
 
-bool IsDigit(char symbol)
+bool String::IsDigit(char symbol)
 {
 	if (symbol >= '0' && symbol <= '9')
 		return true;
 	return false;
 }
 
-size_t CharToDigit(char symbol)
+byte String::CharToDigit(char symbol)
 {
 	return symbol - '0';
 }
 
-bool IsAllowedInInteger(char symbol, unsigned index)
+bool String::IsAllowedInInteger(char symbol, unsigned index)
 {
-	if (IsDigit(symbol))
+	if (String::IsDigit(symbol))
 		return true;
 	if (symbol == '+' || symbol == '-')
 		return index == 0;
@@ -523,46 +531,92 @@ bool String::IsInteger() const
 	return true;
 }
 
-size_t String::IntegerParse() const
+int String::IntegerParse() const
 {
-	size_t result = 0, length = Length();
+	int result = 0;
+	size_t length = Length();
 	char  current = operator[](0);
+	bool isNegative = false;
 	if (IsDigit(current))
 		result += CharToDigit(current);
+	else if (current == '-')
+		isNegative = true;
+	else if (current != '+')
+		throw std::runtime_error("Cannot parse string to integer!!!");
+
 	for (size_t i = 1; i < length; i++)
-		result += CharToDigit(current);
+	{
+		current = operator[](i);
+		if (!IsDigit(current))
+			throw std::runtime_error("Cannot parse string to integer!!!");
+		(result *= 10) += CharToDigit(operator[](i));
+	}
 	return result;
 }
 
-bool IsAllowedInDecimal(char symbol, size_t& decimalsCounter, unsigned index)
+bool String::IsAllowedInDecimal(char symbol, bool& hasDecimalsAlready, unsigned index)
 {
-	if (IsDigit(symbol))
+	if (String::IsDigit(symbol))
 		return true;
 	if (symbol == '+' || symbol == '-')
 		return index == 0;
 	if (symbol == '.' || symbol == ',')
-		return decimalsCounter++ <= 1;
+	{
+		if (hasDecimalsAlready)
+			return false;
+		hasDecimalsAlready = true;
+		return true;
+	}
 	return false;
 }
 
 bool String::IsDecimal() const
 {
-	size_t length = Length(), decimalsCounter = 0;
+	size_t length = Length();
+	bool hasDecimalsAlready = false;
 	for (size_t i = 0; i < length; i++)
 	{
 		char current = operator[](i);
-		if (!IsAllowedInDecimal(current, decimalsCounter, i))
+		if (!IsAllowedInDecimal(current, hasDecimalsAlready, i))
 			return false;
 	}
 	return true;
 }
 
-size_t String::DecimalParse() const
+double String::DecimalParse() const
 {
-	return size_t();
+	double result = 0;
+	size_t length = Length(), decimalCounter = 0;
+	unsigned decimalIndex = length;
+	char  current = operator[](0);
+	bool isNegative = false;
+	if (String::IsDigit(current))
+		result += CharToDigit(current);
+	else if (current == '-')
+		isNegative = true;
+	else if (current != '+')
+		throw std::runtime_error("Cannot parse string to decimal!!!");
+
+	for (size_t i = 1; i < length; i++)
+	{
+		current = operator[](i);
+		if (current == '.' || current == ',')
+		{
+			decimalCounter++;
+			decimalIndex = i;
+			continue;
+		}
+		if (decimalCounter > 1)
+			throw std::runtime_error("Cannot parse string to decimal!!!");
+		if (i < decimalIndex)
+			(result *= 10) += CharToDigit(operator[](i));
+		else
+			result += CharToDigit(operator[](i)) / 10.0;
+	}
+	return result;
 }
 
-size_t GetLength(size_t number)
+size_t String::GetLength(size_t number)
 {
 	size_t length = 0;
 	while (number != 0)
@@ -573,7 +627,18 @@ size_t GetLength(size_t number)
 	return number == 0 ? 1 : length;
 }
 
-char DigitToChar(byte number)
+size_t String::GetLength(int number)
+{
+	size_t length = 0;
+	while (number != 0)
+	{
+		number /= 10;
+		length++;
+	}
+	return number == 0 ? 1 : length;
+}
+
+char String::DigitToChar(byte number)
 {
 	if(number > 9)
 		throw std::runtime_error("Invalid digit");
@@ -582,7 +647,7 @@ char DigitToChar(byte number)
 
 String String::NumericString(size_t number)
 {
-	size_t length = GetLength(number);
+	size_t length = String::GetLength(number);
 	String result(length + 1);
 
 	for (int i = length - 1; i >= 0; i--, number /= 10)
@@ -599,7 +664,21 @@ String String::NumericString(int number)
 
 String String::NumericString(double number)
 {
-	return String();
+	return NumericString(number, DEFAULT_PRECISION);
+}
+
+String String::NumericString(double number, size_t precision)
+{
+	int wholePart = (int)number;
+	double decimalPart = number - wholePart;
+	String result;
+	result += NumericString(wholePart);
+	result += '.';
+	Vector<char> decimalDigits(precision);
+	for (size_t i = 0; i < precision; i++)
+		decimalDigits.PushBack(DigitToChar(decimalPart *= 10));
+	result += decimalDigits;
+	return result;
 }
 
 String operator+(const String& lhs, const String& rhs)
@@ -697,4 +776,30 @@ std::istream& ReadLine(std::istream& input, String& string, char delim)
 	input.getline(buffer, 1024, delim);
 	string = buffer;
 	return input;
+}
+
+const char& String::StringView::operator[](unsigned index) const
+{
+	return data[index];
+}
+
+String::StringView String::StringView::SubstringView(unsigned startIndex) const
+{
+	if (startIndex >= length)
+		throw std::runtime_error("Invalid index");
+	StringView view;
+	view.data = data + startIndex;
+	view.length = length - startIndex;
+	return view;
+}
+
+String::StringView String::StringView::SubstringView(unsigned startIndex, unsigned length) const
+{
+	size_t len = this->length;
+	if (startIndex >= len)
+		throw std::runtime_error("Invalid index");
+	StringView view;
+	view.data = data + startIndex;
+	view.length = (startIndex + length < len) ? length : len - startIndex;
+	return view;
 }

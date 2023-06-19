@@ -6,13 +6,13 @@
 class DecimalCell : public Cell
 {
 	private:
-		double value;
+		double value = 0.0;
 
 	public:
 		DecimalCell() = default;
 		DecimalCell(const String& string);
 		Cell* Clone() const override;
-		String ToString(const Vector<Vector<std::unique_ptr<Cell>>>& reference) const override;
+		String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const override;
 		~DecimalCell() = default;
 };
 

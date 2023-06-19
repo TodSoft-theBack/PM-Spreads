@@ -11,7 +11,7 @@ Cell* DecimalCell::Clone() const
 	return new DecimalCell(*this);
 }
 
-String DecimalCell::ToString(const Vector<Vector<std::unique_ptr<Cell>>>& reference) const
+String DecimalCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
 	return String::NumericString(value);
 }

@@ -6,11 +6,15 @@ typedef uint8_t byte;
 class String
 {
 	public:
+		static const size_t DEFAULT_PRECISION = 2;
 		static const byte SMALL_STRING_MAX_SIZE = sizeof(size_t) + sizeof(char*) + sizeof(size_t) - 1; 
 		struct StringView
 		{
 			const char* data;
 			size_t length;
+			const char& operator[](unsigned index) const;
+			StringView SubstringView(unsigned startIndex) const;
+			StringView SubstringView(unsigned startIndex, unsigned length) const;
 		};
 
     private:
@@ -27,7 +31,7 @@ class String
 		byte& LastByteOf(size_t& variable);
 		byte& LengthByte();
 
-		// Only for small strings
+		//For small strings
 		char CharAt(unsigned index) const; 
 		char& CharAt(unsigned index);
 		
@@ -41,8 +45,8 @@ class String
 
 	    size_t Length() const;
 		size_t Capacity() const;
-		StringView SubStringView(unsigned startIndex, size_t length) const;
-		StringView SubStringView(unsigned startIndex) const;
+		StringView SubstringView(unsigned startIndex, size_t length) const;
+		StringView SubstringView(unsigned startIndex) const;
 		String Substring(unsigned startIndex, size_t length) const;
 		String Substring(unsigned startIndex) const;
 		const String SubstringConst(unsigned startIndex, size_t length) const;
@@ -53,6 +57,7 @@ class String
 		String& operator+=(char rhs);
 	    char operator[](unsigned index) const;
 		char& operator[](unsigned index);
+		StringView GetStringView() const;
 		const char* C_Str() const;
 		size_t CountChar(char symbol) const;
 		int IndexOf(char symbol, unsigned startIndex) const;
@@ -61,14 +66,22 @@ class String
 		int LastIndexOf(char symbol) const;
 		void Trim();
 		static String Trim(const String& string);
-		Vector<String> Split(char delim = ' ') const;	
+		Vector<String> Split(char delim = ' ') const;
+		static bool IsAllowedInInteger(char symbol, unsigned index);
 		bool IsInteger() const;
-		size_t IntegerParse() const;
+		int IntegerParse() const;
+		static bool IsAllowedInDecimal(char symbol, bool& hasDecimalsAlready, unsigned index);
 		bool IsDecimal() const;
-		size_t DecimalParse() const;
+		double DecimalParse() const;
 		static String NumericString(size_t number);
 		static String NumericString(int number);
 		static String NumericString(double number);
+		static String NumericString(double number, size_t precision);
+		static bool IsDigit(char symbol);
+		static byte CharToDigit(char symbol);
+		static char DigitToChar(byte digit);
+		static size_t GetLength(size_t number);
+		static size_t GetLength(int number);
 		
 		friend String operator+(const String& lhs, const String& rhs);
 		friend std::istream& operator>>(std::istream& input, String& string);

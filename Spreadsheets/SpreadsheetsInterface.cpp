@@ -42,6 +42,9 @@ void SpreadsheetsInterface::Save(const Vector<String>& arguments)
 
 void SpreadsheetsInterface::Print(const Vector<String>& arguments)
 {
+	size_t argCount = arguments.Count();
+	if (argCount != 1)
+		throw std::runtime_error("No command with such arguments");
 	fileManager->PrintFile(std::cout, arguments[0].C_Str());
 }
 

@@ -128,14 +128,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BinaryExpression.cpp" />
+    <ClCompile Include="BinaryOperation.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellFactory.cpp" />
     <ClCompile Include="DecimalCell.cpp" />
+    <ClCompile Include="DecimalResult.cpp" />
+    <ClCompile Include="ExpressionParser.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FormulaCell.cpp" />
     <ClCompile Include="IInterfacable.cpp" />
     <ClCompile Include="IntegerCell.cpp" />
+    <ClCompile Include="IntegerResult.cpp" />
     <ClCompile Include="Row.cpp" />
     <ClCompile Include="SpreadsheetsInterface.cpp" />
     <ClCompile Include="String.cpp" />
@@ -144,17 +149,27 @@
     <ClCompile Include="TableFileManager.cpp" />
     <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TextCell.cpp" />
+    <ClCompile Include="UnaryExpression.cpp" />
+    <ClCompile Include="UnaryOperation.cpp" />
+    <ClCompile Include="ValueExpression.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BinaryExpression.h" />
+    <ClInclude Include="BinaryOperation.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellFactory.h" />
     <ClInclude Include="DecimalCell.h" />
+    <ClInclude Include="DecimalResult.h" />
+    <ClInclude Include="Expression.h" />
+    <ClInclude Include="ExpressionParser.h" />
+    <ClInclude Include="ExpressionResult.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FormulaCell.h" />
     <ClInclude Include="IInterfacable.h" />
     <ClInclude Include="IntegerCell.h" />
+    <ClInclude Include="IntegerResult.h" />
     <ClInclude Include="Row.h" />
     <ClInclude Include="SpreadsheetsInterface.h" />
     <ClInclude Include="String.h" />
@@ -162,6 +177,11 @@
     <ClInclude Include="TableFile.h" />
     <ClInclude Include="TableFileManager.h" />
     <ClInclude Include="TextCell.h" />
+    <ClInclude Include="UnaryExpression.h" />
+    <ClInclude Include="UnaryOperation.h" />
+    <ClInclude Include="UniquePtr.hpp" />
+    <ClInclude Include="ValueExpression.h" />
+    <ClInclude Include="ValueFactory.h" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
