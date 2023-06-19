@@ -19,7 +19,7 @@ ExpressionResult* BinaryOperation::operator()(ExpressionResult* left, Expression
 			return left->Add(right->Minus());
 			break;
 		case '/':
-			return left->Multiply(right);
+			return left->Divide(right);
 			break;
 		case '*':
 			return left->Multiply(right);
