@@ -4,15 +4,25 @@
 #include "DecimalCell.h"
 #include "FormulaCell.h"
 
-Cell* CellFactory::CreateCell(const String& value)
+Cell* CellFactory::CreateCell(const char* value)
 {
     String parser = String::Trim(value);
-    if (parser.IsInteger())
-        return new IntegerCell(parser);
-    else if (parser.IsDecimal())
-        return new DecimalCell(parser);
-    else if (parser[0] == '=')
+    if (parser.IsEmpty())
+        return new TextCell();
+    if (parser.First() == '\"' && parser.Last() == '\"')
+        return new TextCell(value);
+    if (parser.First() == '=')
         return new FormulaCell(parser);
 
-    return new TextCell(value);
+    String::NumericType type = parser.CheckType();
+
+    switch (type)
+    {
+        case String::NumericType::Integer:
+            return new IntegerCell(std::move(parser));
+        case String::NumericType::Decimal:
+            return new DecimalCell(std::move(parser));
+        default:
+            throw std::runtime_error("Invalid data type!!!");
+    }
 }

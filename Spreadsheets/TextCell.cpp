@@ -1,8 +1,8 @@
 #include "TextCell.h"
 
-TextCell::TextCell(const String& value) : value(value)
-{
-}
+const char* TextCell::EMPTY_VALUE = "\"\"";
+
+TextCell::TextCell(const char* value) : value(value) { }
 
 Cell* TextCell::Clone() const
 {
@@ -11,5 +11,10 @@ Cell* TextCell::Clone() const
 
 String TextCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
-    return value;
+    size_t length = value.Length();
+    String result(length >= 2 ? length - 2 : 0);
+    if (!result.IsEmpty())
+        for (size_t i = 1; i < length - 1; i++)
+            result[i - 1] = value[i];
+    return result;
 }

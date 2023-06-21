@@ -7,8 +7,12 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 	table = Table(lines);
 	for (size_t i = 0; i < lines; i++)
 	{
+		size_t columns = table.Columns();
 		ReadLine(stream, line);
-		table.AddRow(Row::ParseLine(line));
+		if (line.IsEmpty())
+			table.AddRow();
+		else
+			table.AddRow(Row::ParseLine(line, columns, table.ColumnWidths()));
 	}
 }
 

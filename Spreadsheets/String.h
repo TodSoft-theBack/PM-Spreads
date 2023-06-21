@@ -17,6 +17,13 @@ class String
 			StringView SubstringView(unsigned startIndex, unsigned length) const;
 		};
 
+		enum struct NumericType 
+		{
+			Integer,
+			Decimal,
+			NaN
+		};
+
     private:
         char* _data = nullptr;
 	    size_t _length = 0;
@@ -39,6 +46,7 @@ class String
 	    String();
 		explicit String(size_t length);
 	    String(const char* string);
+		String(const StringView& string);
 		String(const Vector<char>& collection);
 	    String(const String& string);
 		String(String&& temporary) noexcept;
@@ -49,14 +57,14 @@ class String
 		StringView SubstringView(unsigned startIndex) const;
 		String Substring(unsigned startIndex, size_t length) const;
 		String Substring(unsigned startIndex) const;
-		const String SubstringConst(unsigned startIndex, size_t length) const;
-		const String SubstringConst(unsigned startIndex) const;
 		String& operator=(const String& rhs);
 		String& operator=(String&& rhs) noexcept;
 		String& operator+=(const String& rhs);
 		String& operator+=(char rhs);
 	    char operator[](unsigned index) const;
 		char& operator[](unsigned index);
+		char First() const;
+		char Last() const;
 		operator const char* () const;
 		StringView GetStringView() const;
 		const char* C_Str() const;
@@ -67,7 +75,10 @@ class String
 		int LastIndexOf(char symbol) const;
 		void Trim();
 		static String Trim(const String& string);
+		static String Trim(const StringView& string);
 		Vector<String> Split(char delim = ' ') const;
+		bool IsEmpty() const;
+		NumericType CheckType() const;
 		static bool IsAllowedInInteger(char symbol, unsigned index);
 		bool IsInteger() const;
 		int IntegerParse() const;

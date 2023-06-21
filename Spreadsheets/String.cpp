@@ -64,7 +64,7 @@ byte& String::LastByteOf(size_t& variable)
 char String::CharAt(unsigned index) const
 {
 	if (index >= SMALL_STRING_MAX_SIZE)
-		throw std::runtime_error("Index was outside the bounds of the collection");
+		throw std::runtime_error("Index was outside the string");
 
 	if(index < sizeof(_data))
 		return ((char*)(&_data))[index]; 
@@ -76,7 +76,7 @@ char String::CharAt(unsigned index) const
 char& String::CharAt(unsigned index)
 {
 	if (index >= SMALL_STRING_MAX_SIZE)
-		throw std::runtime_error("Index was outside the bounds of the collection");
+		throw std::runtime_error("Index was outside the string");
 
 	if(index < sizeof(_data))
 		return ((char*)(&_data))[index]; 
@@ -111,7 +111,7 @@ String::String(const char* data)
 {
 	if(data == nullptr)
 	{
-		LengthByte() = SMALL_STRING_MAX_SIZE;
+		LengthByte() = SMALL_STRING_MAX_SIZE - 1;
 		return;
 	}
 	size_t capacity = strlen(data) + 1;
@@ -125,6 +125,31 @@ String::String(const char* data)
 	
 	_data = new char[capacity];
 	strcpy(_data, data);
+	_length = capacity - 1;
+	_capacity = capacity;
+}
+
+String::String(const StringView& string)
+{
+	if (string.length == 0)
+	{
+		LengthByte() = SMALL_STRING_MAX_SIZE - 1;
+		return;
+	}
+	size_t capacity = string.length + 1;
+	if (capacity <= SMALL_STRING_MAX_SIZE)
+	{
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - capacity + 1;
+		for (size_t i = 0; i < string.length; i++)
+			CharAt(i) = string[i];
+		CharAt(string.length) = '\0';
+		return;
+	}
+
+	_data = new char[capacity];
+	for (size_t i = 0; i < string.length; i++)
+		_data[i] = string[i];
+	_data[string.length] = '\0';
 	_length = capacity - 1;
 	_capacity = capacity;
 }
@@ -226,16 +251,6 @@ String String::Substring(unsigned startIndex) const
 	return result;
 }
 
-const String String::SubstringConst(unsigned startIndex, size_t length) const
-{
-	return Substring(startIndex, length);
-}
-
-const String String::SubstringConst(unsigned startIndex) const
-{
-	return Substring(startIndex);
-}
-
 String& String::operator=(const String& rhs)
 {
 	if (this != &rhs)
@@ -335,6 +350,16 @@ char& String::operator[](unsigned index)
 	if (!IsSmallString())
 		return _data[index];
 	return CharAt(index);
+}
+
+char String::First() const
+{
+	return operator[](0);
+}
+
+char String::Last() const
+{
+	return operator[](Length() - 1);
 }
 
 String::operator const char* () const
@@ -444,6 +469,8 @@ void String::Trim()
 String String::Trim(const String& string)
 {
 	size_t length = string.Length();
+	if (length == 0)
+		return string;
 	unsigned startIndex = 0, endIndex = length - 1;
 
 	for (size_t i = 0; i < length; i++)
@@ -471,6 +498,38 @@ String String::Trim(const String& string)
 	return result;
 }
 
+String String::Trim(const StringView& string)
+{
+	size_t length = string.length;
+	if (length == 0)
+		return String();
+	unsigned startIndex = 0, endIndex = length - 1;
+
+	for (size_t i = 0; i < length; i++)
+		if (string[i] != ' ')
+		{
+			startIndex = i;
+			break;
+		}
+
+	for (long i = length - 1; i >= 0; i--)
+		if (string[i] != ' ')
+		{
+			endIndex = i;
+			break;
+		}
+
+	if (startIndex == 0 && endIndex == length - 1)
+		return String(string);
+
+	size_t resultLen = endIndex + 1 - startIndex;
+	String result(resultLen + 1);
+	for (unsigned i = startIndex; i <= endIndex; i++)
+		result[i - startIndex] = string[i];
+	result[resultLen] = '\0';
+	return result;
+}
+
 Vector<String> String::Split(char delim) const
 {
 	Vector<String> result;
@@ -478,31 +537,51 @@ Vector<String> String::Split(char delim) const
 	size_t len = Length();
 	
 	int delimIndex = -1;
-	bool collecting = true;
 	for (size_t i = 0; i < len; i++)
 	{
 		char currentChar = operator[](i);
 		if (currentChar == delim)
 		{
 			delimIndex = i;
-			if (collecting)
-			{
-				result.PushBack(string);
-				string = std::move(Vector<char>());
-				collecting = false;
-			}		
+			result.PushBack(String::Trim(string));
+			string = std::move(Vector<char>());
+			continue;
 		}
-		if (currentChar != delim)
-			collecting = true;
-		if (collecting)
-			string.PushBack(currentChar);
+		string.PushBack(currentChar);
 	}
 	if (delimIndex == -1)
+	{
 		result.PushBack(*this);
-
-	if (delimIndex < len - 1)
-		result.PushBack(String::Trim(SubstringConst(delimIndex + 1)));
+		return result;
+	}
+	if (!string.IsEmpty())
+		result.PushBack(String::Trim(string));
 	return result;
+}
+
+bool String::IsEmpty() const
+{
+	return Length() == 0;
+}
+
+String::NumericType String::CheckType() const
+{
+	NumericType type = NumericType::Integer;
+	size_t length = Length();
+	bool hasDecimals = false;
+	for (size_t i = 0; i < length; i++)
+	{
+		char current = operator[](i);
+		if (type == NumericType::Integer && !IsAllowedInInteger(current, i))
+			type = NumericType::Decimal;
+
+		if (type == NumericType::Decimal && !IsAllowedInDecimal(current, hasDecimals, i))
+			type = NumericType::NaN;
+
+		if (type == NumericType::NaN)
+			break;
+	}
+	return type;
 }
 
 
@@ -621,6 +700,8 @@ double String::DecimalParse() const
 		else
 			result += CharToDigit(operator[](i)) / 10.0;
 	}
+	if (isNegative)
+		result *= -1;
 	return result;
 }
 
@@ -735,7 +816,7 @@ std::ostream& operator<<(std::ostream& output, const String& string)
 
 bool operator==(const String& lhs, const String& rhs)
 {
-	return strcmp(lhs.C_Str(), rhs.C_Str()) == 0;
+	return strcmp(lhs, rhs) == 0;
 }
 
 bool operator!=(const String& lhs, const String& rhs)
@@ -745,12 +826,12 @@ bool operator!=(const String& lhs, const String& rhs)
 
 bool operator<(const String& lhs, const String& rhs)
 {
-	return strcmp(lhs.C_Str(), rhs.C_Str()) < 0;
+	return strcmp(lhs, rhs) < 0;
 }
 
 bool operator>(const String& lhs, const String& rhs)
 {
-	return strcmp(lhs.C_Str(), rhs.C_Str()) > 0;
+	return strcmp(lhs, rhs) > 0;
 }
 
 bool operator<=(const String& lhs, const String& rhs)
@@ -765,7 +846,7 @@ bool operator>=(const String& lhs, const String& rhs)
 
 bool operator==(const String& lhs, const char* rhs)
 {
-	return strcmp(lhs.C_Str(), rhs) == 0;
+	return strcmp(lhs, rhs) == 0;
 }
 
 bool operator!=(const String& lhs, const char* rhs)
@@ -775,12 +856,12 @@ bool operator!=(const String& lhs, const char* rhs)
 
 bool operator<(const String& lhs, const const char* rhs)
 {
-	return strcmp(lhs.C_Str(), rhs) < 0;
+	return strcmp(lhs, rhs) < 0;
 }
 
 bool operator>(const String& lhs, const char* rhs)
 {
-	return strcmp(lhs.C_Str(), rhs) > 0;
+	return strcmp(lhs, rhs) > 0;
 }
 
 bool operator<=(const String& lhs, const char* rhs)

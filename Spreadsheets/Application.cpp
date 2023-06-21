@@ -28,7 +28,7 @@ void Application::Run()
 {
 	//Gets a void* (handle) to the currently running console (works only on Windows)
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	std::cout << "Starting " << _applicationName <<"..." << std::endl;
+	std::cout << "Starting " << _applicationName << "..." << std::endl;
 
 	String line;
 	String command;
@@ -48,8 +48,8 @@ void Application::Run()
 			command = line;
 		else
 		{
-			command = std::move(String::Trim(line.SubstringConst(0, commandIndex)));
-			arguments = String::Trim(line.SubstringConst(commandIndex + 1)).Split();
+			command = std::move(String::Trim(line.SubstringView(0, commandIndex)));
+			arguments = String::Trim(line.SubstringView(commandIndex + 1)).Split();
 		}
 
 		if (command == _exitCommand)

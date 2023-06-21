@@ -7,8 +7,12 @@ class Row
 {
 	private:
 		static const size_t DEFAULT_CAPACITY = 8;
+
 	public:
-		static Row ParseLine(const String& input);
+		static Row ParseLine(const String& line);
+		static Row ParseLine(const String& line, size_t columnCount);
+		static Row ParseLine(const String& line, size_t columnCount, Vector<size_t>& widths);
+
 	private:
 		Cell** container = nullptr;
 		size_t _count = 0;
@@ -31,6 +35,7 @@ class Row
 		Vector<UniquePtr<Cell>> Collection() const;
 		const Cell* operator[](unsigned index) const;
 		Cell*& operator[](unsigned index);
+		bool IsEmpty() const;
 		~Row();
 };
 

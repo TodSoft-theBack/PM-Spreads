@@ -34,6 +34,7 @@ class Vector
         const T& operator[] (unsigned index) const;
         T& operator[] (unsigned index);
 
+        bool IsEmpty() const;
         void PushBack(const T& item);
         void PushBack(T&& item);
         int IndexOf(const T& item, unsigned startIndex) const;
@@ -209,6 +210,12 @@ T& Vector<T>::operator[] (unsigned index)
         throw std::runtime_error("Index was outside of the bounds of the vector!");
     
     return collection[index];
+}
+
+template<typename T>
+bool Vector<T>::IsEmpty() const
+{
+    return count == 0;
 }
 
 template<typename T>

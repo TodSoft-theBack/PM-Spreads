@@ -19,7 +19,7 @@ void SpreadsheetsInterface::Open(const Vector<String>& arguments)
 
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments");
-	fileManager->OpenFile(arguments[0].C_Str());
+	fileManager->OpenFile(arguments[0]);
 }
 
 void SpreadsheetsInterface::Save(const Vector<String>& arguments)
@@ -27,7 +27,7 @@ void SpreadsheetsInterface::Save(const Vector<String>& arguments)
 	size_t argCount = arguments.Count();
 	if (argCount == 1)
 	{
-		fileManager->Save(arguments[0].C_Str());
+		fileManager->Save(arguments[0]);
 		return;
 	}
 
@@ -36,7 +36,7 @@ void SpreadsheetsInterface::Save(const Vector<String>& arguments)
 
 	if (arguments[1] != "as")
 		throw std::runtime_error("No command with such arguments");
-	fileManager->SaveAs(arguments[0].C_Str(), arguments[2].C_Str());
+	fileManager->SaveAs(arguments[0], arguments[2]);
 	std::cout << "Executed on " << arguments;
 }
 
@@ -45,7 +45,7 @@ void SpreadsheetsInterface::Print(const Vector<String>& arguments)
 	size_t argCount = arguments.Count();
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments");
-	fileManager->PrintFile(std::cout, arguments[0].C_Str());
+	fileManager->PrintFile(std::cout, arguments[0]);
 }
 
 void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
@@ -61,7 +61,7 @@ void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
 	if (row < 0 || column < 0)
 		throw std::runtime_error("Only 1 based indecies allowed!!");
 
-	fileManager->Edit(arguments[0].C_Str(), row, column, arguments[3].C_Str());
+	fileManager->Edit(arguments[0], row, column, arguments[3]);
 }
 
 void SpreadsheetsInterface::Close(const Vector<String>& arguments)
@@ -69,7 +69,7 @@ void SpreadsheetsInterface::Close(const Vector<String>& arguments)
 	size_t argCount = arguments.Count();
 	if (argCount != 1)
 		throw std::runtime_error("No command with such arguments!");
-	fileManager->CloseFile(arguments[0].C_Str());
+	fileManager->CloseFile(arguments[0]);
 }
 
 SpreadsheetsInterface::~SpreadsheetsInterface() 

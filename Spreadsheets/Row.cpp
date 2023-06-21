@@ -9,7 +9,45 @@ Row Row::ParseLine(const String& line)
 	size_t count = values.Count();
 	Row result;
 	for (size_t i = 0; i < count; i++)
-		result.AddCell(CellFactory::CreateCell(String::Trim(values[i]).C_Str()));
+		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
+	return result;
+}
+
+Row Row::ParseLine(const String& line, size_t columnCount)
+{
+	if (line.Length() == 0)
+		return Row();
+	Vector<String> values = line.Split(',');
+	size_t count = values.Count();
+	Row result;
+	for (size_t i = 0; i < count; i++)
+		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
+
+	if (count < columnCount)
+		for (size_t i = count; i < columnCount; i++)
+			result.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
+
+	return result;
+}
+
+Row Row::ParseLine(const String& line, size_t columnCount, Vector<size_t>& widths)
+{
+	if (line.Length() == 0)
+		return Row();
+	Vector<String> values = line.Split(',');
+	size_t count = values.Count();
+	Row result;
+	for (size_t i = 0; i < count; i++)
+	{
+		if (values[i].Length() > widths[i])
+			widths[i] = values[i].Length();
+		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
+	}
+
+	if (count < columnCount)
+		for (size_t i = count; i < columnCount; i++)
+			result.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
+
 	return result;
 }
 
@@ -120,6 +158,11 @@ const Cell* Row::operator[](unsigned index) const
 Cell*& Row::operator[](unsigned index)
 {
 	return container[index];
+}
+
+bool Row::IsEmpty() const
+{
+	return _count == 0;
 }
 
 Row::~Row()
