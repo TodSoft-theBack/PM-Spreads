@@ -56,7 +56,10 @@ void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
 	if (!arguments[1].IsInteger() || !arguments[2].IsInteger())
 		throw std::runtime_error("Please provide valid row and columns!");
 
-	size_t row = arguments[1].IntegerParse(), column = arguments[2].IntegerParse();
+	size_t row = arguments[1].IntegerParse() - 1, column = arguments[2].IntegerParse() - 1;
+
+	if (row < 0 || column < 0)
+		throw std::runtime_error("Only 1 based indecies allowed!!");
 
 	fileManager->Edit(arguments[0].C_Str(), row, column, arguments[3].C_Str());
 }

@@ -7,7 +7,7 @@ Row Row::ParseLine(const String& line)
 		return Row();
 	Vector<String> values = line.Split(',');
 	size_t count = values.Count();
-	Row result(count);
+	Row result;
 	for (size_t i = 0; i < count; i++)
 		result.AddCell(CellFactory::CreateCell(String::Trim(values[i]).C_Str()));
 	return result;
@@ -36,6 +36,7 @@ void Row::MoveMemberData(Row&& temporary) noexcept
 	_count = temporary._count;
 	container = temporary.container;
 	temporary.container = nullptr;
+	temporary._count = 0;
 }
 
 void Row::Resize(size_t size)

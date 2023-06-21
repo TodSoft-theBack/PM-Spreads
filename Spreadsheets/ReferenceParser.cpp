@@ -16,10 +16,10 @@ String ReferenceParser::SubstituteTalbeReferences(const String& value, const Vec
 					rowEndIndex = j;
 					break;
 				}
-			row = value.Substring(i, rowEndIndex - i).IntegerParse();
+			row = value.Substring(i+1, rowEndIndex - i - 1).IntegerParse();
 			unsigned columnEndIndex = rowEndIndex;
 			for (size_t j = rowEndIndex + 1; j < length; j++)
-				if (value[i] == 'C')
+				if (!String::IsDigit(value[j]))
 				{
 					columnEndIndex = j;
 					break;

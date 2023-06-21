@@ -28,6 +28,7 @@ void Table::AddRow(const Row& row)
 {
 	if (row.Size() > _columns)
 		_columns = row.Size();
+
 	container.PushBack(row);
 }
 

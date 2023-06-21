@@ -304,7 +304,9 @@ String& String::operator+=(char rhs)
 	if (IsSmallString() && resultCapacity <= SMALL_STRING_MAX_SIZE ||
 	   !IsSmallString() && resultCapacity <= _capacity)
 	{
-		operator[](len) = rhs;	
+		LengthByte() = (SMALL_STRING_MAX_SIZE - 1) - len - 1;
+		operator[](len) = rhs;
+		operator[](len + 1) = '\0';
 		return *this;
 	}
 
@@ -314,6 +316,7 @@ String& String::operator+=(char rhs)
 	for (size_t i = 0; i < len; i++)
 		result[i] = operator[](i);
 	result[len] = rhs;
+	result[len+1] = '\0';
 	delete[] _data;
 	_data = result;
 	_length = _capacity - 1;
@@ -332,6 +335,11 @@ char& String::operator[](unsigned index)
 	if (!IsSmallString())
 		return _data[index];
 	return CharAt(index);
+}
+
+String::operator const char* () const
+{
+	return C_Str();
 }
 
 String::StringView String::GetStringView() const
@@ -629,13 +637,16 @@ size_t String::GetLength(size_t number)
 
 size_t String::GetLength(int number)
 {
+	if (number == 0)
+		return 1;
 	size_t length = 0;
-	while (number != 0)
+	if (number < 0)
+		length = 1;
+	do
 	{
 		number /= 10;
 		length++;
-	}
-	return number == 0 ? 1 : length;
+	} while (number != 0);
 }
 
 char String::DigitToChar(byte number)
@@ -659,7 +670,19 @@ String String::NumericString(size_t number)
 
 String String::NumericString(int number)
 {
-	return String();
+	size_t length = String::GetLength(number);
+
+	String result(length);
+	
+	if (number < 0 )
+		for (int i = length - 1; i >0; i--, number /= 10)
+			result[i] = DigitToChar(number % 10);
+	else
+		for (int i = length - 1; i >= 0; i--, number /= 10)
+			result[i] = DigitToChar(number % 10);
+
+	result[length] = '\0';
+	return result;
 }
 
 String String::NumericString(double number)

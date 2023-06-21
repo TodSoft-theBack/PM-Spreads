@@ -12,5 +12,5 @@ Cell* IntegerCell::Clone() const
 
 String IntegerCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
-	return String();
+	return String::NumericString(value);
 }

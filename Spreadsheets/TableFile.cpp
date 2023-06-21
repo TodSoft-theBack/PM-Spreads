@@ -8,7 +8,7 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 	for (size_t i = 0; i < lines; i++)
 	{
 		ReadLine(stream, line);
-		table.AddRow(std::move(Row::ParseLine(line)));
+		table.AddRow(Row::ParseLine(line));
 	}
 }
 

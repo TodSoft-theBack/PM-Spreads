@@ -8,6 +8,7 @@ class Table
 	public:
 	private:
 		 Vector<Row> container;
+		 Vector<unsigned> columnWidths;
 		 size_t _rows = 0;
 		 size_t _columns = 0;
 

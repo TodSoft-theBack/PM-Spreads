@@ -57,6 +57,7 @@ class String
 		String& operator+=(char rhs);
 	    char operator[](unsigned index) const;
 		char& operator[](unsigned index);
+		operator const char* () const;
 		StringView GetStringView() const;
 		const char* C_Str() const;
 		size_t CountChar(char symbol) const;
