@@ -11,6 +11,5 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdsh
     Window window("PM Spreads");
     window.Run();
 
-    glfwTerminate();
     return EXIT_SUCCESS;
 }
