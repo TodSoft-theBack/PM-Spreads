@@ -5,6 +5,8 @@
 
 #include <GLFW/glfw3.h>
 #include <stdexcept>
+#include "Spreadsheets/Table.h"
+
 
 class Window
 {
@@ -12,7 +14,8 @@ class Window
         static const char* DEFAULT_NAME;
         static const int DEFAULT_WIDTH;
         static const int DEFAULT_HEIGHT;
-        static void ShowFullscreen();
+        void ShowFullscreen();
+        
         GLFWwindow* window;
 
         virtual void Render();

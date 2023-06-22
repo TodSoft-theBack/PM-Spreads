@@ -1,5 +1,5 @@
 #include "Window.h"
-#include <Spreadsheets/TableFile.h>
+#include "Spreadsheets/TableFile.h"
 
 const char* Window::DEFAULT_NAME = "Basic window";
 const int Window::DEFAULT_WIDTH = 1280;
@@ -41,17 +41,31 @@ void Window::ShowFullscreen()
         }
         ImGui::EndMainMenuBar();
 
-        TableFile tableFile("D:\Coding\PM Spreads\Spreadsheets\Example.csv");
-        size_t rows = tableFile.table.Rows(), columns = tableFile.table.Columns();
-        if (ImGui::BeginTable("Example.csv", columns))
+
+        Table Table(5,5);
+        try
         {
-            for (int row = 0; row < rows; row++)
+            TableFile tableFile("Example.csv");
+            Table = tableFile.table;
+        }
+        catch (const std::runtime_error& ex)
+        {
+            ImGui::Text(ex.what());
+        }
+        catch (...)
+        {
+            std::cout << "Generic error";
+        }
+
+        if (ImGui::BeginTable("Example.csv", Table.Columns()))
+        {
+            for (int row = 0; row < Table.Rows(); row++)
             {
                 ImGui::TableNextRow();
-                for (int column = 0; column < 3; column++)
+                for (int column = 0; column < Table.Columns(); column++)
                 {
                     ImGui::TableSetColumnIndex(column);
-                    ImGui::Text(tableFile.table[row][column]->ToString(tableFile.table.Collection()));
+                    ImGui::Text(Table[row][column]->ToString(Table.Collection()));
                 }
             }
             ImGui::EndTable();

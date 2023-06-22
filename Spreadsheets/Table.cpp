@@ -17,6 +17,19 @@ Table::Table(size_t rows) : _rows(rows)
 	container = std::move(Vector<Row>(_rows));
 }
 
+Table::Table(size_t rows, size_t columns)
+{
+	_rows = rows;
+	_columns = columns;
+	for (size_t i = 0; i < _rows; i++)
+	{
+		Row row(_columns);
+		for (size_t i = 0; i < _columns; i++)
+			row.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
+		container.PushBack(std::move(row));
+	}
+}
+
 size_t Table::Rows() const
 {
     return _rows;

@@ -3,6 +3,9 @@
 File::File(const char* path) : filename(path)
 {
     stream.open(path, std::ios::in | std::ios::_Nocreate);
+
+    if (!stream || !stream.is_open())
+        throw std::runtime_error("Could not open file!!");
 }
 
 const std::fstream& File::Stream() const

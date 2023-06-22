@@ -3,6 +3,7 @@
 #include "Window.h"
 
 
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
 {
     if (!glfwInit())
@@ -10,6 +11,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdsh
 
     Window window("PM Spreads");
     window.Run();
-
+    
     return EXIT_SUCCESS;
 }

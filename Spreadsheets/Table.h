@@ -16,6 +16,7 @@ class Table
 	public:
 		Table() = default;
 		Table(size_t rows);
+		Table(size_t rows, size_t columns);
 		size_t Rows() const;
 		size_t Columns() const;
 		Vector<size_t>& ColumnWidths();

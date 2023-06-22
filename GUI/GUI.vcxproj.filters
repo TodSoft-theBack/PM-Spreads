@@ -98,5 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependancies\ImGUI\imgui-master.zip" />
+    <None Include="src\Example.csv" />
   </ItemGroup>
 </Project>
