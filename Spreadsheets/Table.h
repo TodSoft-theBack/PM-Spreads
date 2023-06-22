@@ -7,12 +7,14 @@ class Table
 {
 	public:
 		static const size_t DEFAULT_COLUMNS = 0;
+
 	private:
 		Vector<Row> container;
 		Vector<size_t> maxWidthsPerColumn;
 		size_t _rows = 0;
 		size_t _columns = DEFAULT_COLUMNS;
 		void HandleColumnSizes(const Row& row);
+
 	public:
 		Table() = default;
 		Table(size_t rows);

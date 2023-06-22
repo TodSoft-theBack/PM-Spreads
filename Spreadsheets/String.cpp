@@ -673,7 +673,8 @@ bool String::IsDecimal() const
 double String::DecimalParse() const
 {
 	double result = 0;
-	size_t length = Length(), decimalCounter = 0;
+	size_t length = Length();
+	bool hasDecimalAlready = false;
 	unsigned decimalIndex = length;
 	char  current = operator[](0);
 	bool isNegative = false;
@@ -689,17 +690,18 @@ double String::DecimalParse() const
 		current = operator[](i);
 		if (current == '.' || current == ',')
 		{
-			decimalCounter++;
+			if (hasDecimalAlready)
+				throw std::runtime_error("Cannot parse string to decimal!!!");
+			hasDecimalAlready = true;
 			decimalIndex = i;
 			continue;
 		}
-		if (decimalCounter > 1)
-			throw std::runtime_error("Cannot parse string to decimal!!!");
-		if (i < decimalIndex)
-			(result *= 10) += CharToDigit(operator[](i));
-		else
-			result += CharToDigit(operator[](i)) / 10.0;
+		(result *= 10) += CharToDigit(operator[](i));
 	}
+
+	for (size_t i = decimalIndex + 1; i < length; i++)
+		result /= 10.0;
+
 	if (isNegative)
 		result *= -1;
 	return result;
@@ -776,11 +778,18 @@ String String::NumericString(double number, size_t precision)
 	int wholePart = (int)number;
 	double decimalPart = number - wholePart;
 	String result;
+	if (number < 0)
+		result += '-';
 	result += NumericString(wholePart);
 	result += '.';
 	Vector<char> decimalDigits(precision);
 	for (size_t i = 0; i < precision; i++)
-		decimalDigits.PushBack(DigitToChar(decimalPart *= 10));
+	{
+		uint8_t digit = (uint8_t)(decimalPart *= 10);
+		decimalPart -= digit;
+		decimalDigits.PushBack(DigitToChar(digit));
+	}
+		
 	result += decimalDigits;
 	return result;
 }

@@ -24,6 +24,9 @@ File* TableFile::Clone() const
 void TableFile::EditAtPos(unsigned row, unsigned column, const char* newValue)
 {
 	table[row][column] = CellFactory::CreateCell(newValue);
+	size_t length = strlen(newValue);
+	if (length > table.ColumnWidths()[column])
+		table.ColumnWidths()[column] = length;
 }
 
 void TableFile::SaveAs(const char* filename)
@@ -35,7 +38,7 @@ void TableFile::SaveAs(const char* filename)
 	for (size_t row = 0; row < rows; row++)
 	{
 		for (size_t column = 0; column < columns; column++)
-			stream << table[row][column]->ToString(table.Collection()) << (column < columns - 1 ? ", " : "");
+			stream << "\"" << table[row][column]->ToString(table.Collection()) << "\"" << (column < columns - 1 ? ", " : "");
 		stream << std::endl;
 	}
 	stream.close();

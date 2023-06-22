@@ -7,7 +7,7 @@ class TextCell : public Cell
 	public:
 		static const char* EMPTY_VALUE;
 	private:
-		String value = EMPTY_VALUE;
+		String value;
 	public:
 		TextCell() = default;
 		TextCell(const char* value);
