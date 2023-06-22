@@ -11,10 +11,6 @@ Cell* FormulaCell::Clone() const
 
 String FormulaCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
-	return ExpressionParser::ParseExpression
-	(
-		ReferenceParser::SubstituteTalbeReferences(value, reference).SubstringView(1)
-	)
-	->Evaluate()
-	->GetResult();
+	//ReferenceParser::SubstituteTalbeReferences(value, reference).SubstringView(1);
+	return ExpressionParser::ParseExpression("-5 + 10 * 2")->Evaluate() ->GetResult();
 }

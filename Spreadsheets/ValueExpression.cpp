@@ -2,6 +2,11 @@
 #include "IntegerResult.h"
 #include "DecimalResult.h"
 
+ValueExpression::ValueExpression()
+{
+	SetValue("");
+}
+
 ValueExpression::ValueExpression(const String& value)
 {
 	SetValue(value);

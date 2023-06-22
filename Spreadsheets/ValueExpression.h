@@ -8,6 +8,7 @@ class ValueExpression : public Expression
 		String value;
 
 	public:
+		ValueExpression();
 		ValueExpression(const String& value);
 		ExpressionResult* Evaluate() const override;
 		Expression* Clone() const override;
