@@ -8,8 +8,6 @@ TableFileManager::TableFileManager()
 void TableFileManager::OpenFile(const char* filepath)
 {
 	File* file = new TableFile(filepath);
-	if (!file->Stream().is_open())
-		throw std::runtime_error("Could not open file!");
 	if (_count == _capacity)
 		Resize(_capacity * 2);
 	files[_count++] = file;
@@ -48,14 +46,11 @@ void TableFileManager::CloseFile(const char* filepath)
 		{
 			if (currentFile->HasChanged())
 				throw std::runtime_error("Unsaved changes are present Cannot close");
-			delete files[i];
+			delete currentFile;
 			std::swap(files[i], files[--_count]);
+			return;
 		}
 	}
-	
+	throw std::runtime_error("No such file is opened");
 }
 
-TableFileManager::~TableFileManager()
-{
-
-}

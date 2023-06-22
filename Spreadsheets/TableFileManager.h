@@ -12,6 +12,6 @@ class TableFileManager : public FileManager
 		void Save(const char* filepath) override;
 		void SaveAs(const char* originalfilePath, const char* newFilePath) override;
 		void CloseFile(const char* filepath) override;
-		~TableFileManager();
+		~TableFileManager() = default;
 };
 

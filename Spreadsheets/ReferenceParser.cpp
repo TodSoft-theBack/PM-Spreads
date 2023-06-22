@@ -31,5 +31,6 @@ String ReferenceParser::SubstituteTalbeReferences(const String& value, const Vec
 		}
 		parsedString += value[i];
 	}
+	std::cout << parsedString << std::endl;
     return parsedString;
 }
