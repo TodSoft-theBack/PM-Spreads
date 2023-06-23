@@ -163,6 +163,11 @@
     <None Include="Dependancies\ImGUI\imgui-master.zip" />
     <None Include="src\Example.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spreadsheets\Spreadsheets.vcxproj">
+      <Project>{5edcbe45-6103-4240-bb48-9324818d012e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

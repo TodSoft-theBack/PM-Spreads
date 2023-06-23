@@ -167,20 +167,29 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 	if (result.Count() == 1)
 		result = OperationSplit(expression, operations, OperationPrecedence::Multiplication);
 
+	if (result.Count() == 2)
+		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
+
 	if (result.Count() == 1)
 		result = OperationSplit(expression, operations, OperationPrecedence::Exponentiation);
 
-	Expression* output = nullptr;
+	if (result.Count() == 2)
+		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
 
-	for (size_t i = 0; i < operations.Count(); i++)
+	Expression* output = new ValueExpression();
+	bool isInitialised = false;
+	size_t operationsCount = operations.Count();
+
+	for (size_t i = 0; i < operationsCount; i++)
 	{
-		if (output == nullptr)
+		if (!isInitialised)
 		{
 			String left = result[i], right = result[i + 1];
 			if (left.IsEmpty())
 				output = new UnaryExpression(operations[i], ParseExpression(right));
 			else
 				output = new BinaryExpression(operations[i], ParseExpression(left), ParseExpression(right));
+			isInitialised = true;
 		}
 		else
 			output = new BinaryExpression(operations[i], output, ParseExpression(result[i + 1]));	}

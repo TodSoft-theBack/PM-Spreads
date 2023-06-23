@@ -20,12 +20,12 @@ void Window::ShowFullscreen()
 
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open..", "Ctrl+O"))
+            if (ImGui::MenuItem("Open file", "Ctrl+O"))
             {
 
             }
 
-            if (ImGui::MenuItem("Save", "Ctrl+S"))
+            if (ImGui::MenuItem("Save current", "Ctrl+S"))
             {
 
             }
@@ -45,8 +45,21 @@ void Window::ShowFullscreen()
         Table Table(5,5);
         try
         {
-            TableFile tableFile("Example.csv");
+            TableFile tableFile("D:\\Coding\\PM Spreads\\Spreadsheets\\Pepe.csv");
             Table = tableFile.table;
+            if (ImGui::BeginTable("Example.csv", Table.Columns()))
+            {
+                for (int row = 0; row < Table.Rows(); row++)
+                {
+                    ImGui::TableNextRow();
+                    for (int column = 0; column < Table.Columns(); column++)
+                    {
+                        ImGui::TableSetColumnIndex(column);
+                        ImGui::Text(Table[row][column]->ToString(Table.Collection()));
+                    }
+                }
+                ImGui::EndTable();
+            }
         }
         catch (const std::runtime_error& ex)
         {
@@ -55,20 +68,6 @@ void Window::ShowFullscreen()
         catch (...)
         {
             std::cout << "Generic error";
-        }
-
-        if (ImGui::BeginTable("Example.csv", Table.Columns()))
-        {
-            for (int row = 0; row < Table.Rows(); row++)
-            {
-                ImGui::TableNextRow();
-                for (int column = 0; column < Table.Columns(); column++)
-                {
-                    ImGui::TableSetColumnIndex(column);
-                    ImGui::Text(Table[row][column]->ToString(Table.Collection()));
-                }
-            }
-            ImGui::EndTable();
         }
     }
     ImGui::End();
