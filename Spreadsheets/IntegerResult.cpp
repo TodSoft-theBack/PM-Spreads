@@ -37,7 +37,7 @@ ExpressionResult* IntegerResult::Multiply(ExpressionResult* right)
 
 ExpressionResult* IntegerResult::Divide(ExpressionResult* right)
 {
-	return nullptr;
+	return right->Divide(this);
 }
 
 ExpressionResult* IntegerResult::Power(ExpressionResult* right)
@@ -52,7 +52,7 @@ ExpressionResult* IntegerResult::Add(IntegerResult* right)
 
 ExpressionResult* IntegerResult::Multiply(IntegerResult* right)
 {
-	return new IntegerResult(this->Value() + right->Value());
+	return new IntegerResult(this->Value() * right->Value());
 }
 
 ExpressionResult* IntegerResult::Divide(IntegerResult* right)
@@ -62,8 +62,8 @@ ExpressionResult* IntegerResult::Divide(IntegerResult* right)
 
 ExpressionResult* IntegerResult::Power(IntegerResult* right)
 {
-	int result = 1, value = this->Value();
-	int power = right->Value();
+	int result = 1, value = right->Value();
+	int power = this->Value();
 	if (power < 0)
 		value = 1 / value;
 	for (size_t i = 0; i < power; i++)
@@ -73,23 +73,23 @@ ExpressionResult* IntegerResult::Power(IntegerResult* right)
 
 ExpressionResult* IntegerResult::Add(DecimalResult* right)
 {
-	return new DecimalResult(this->Value()+ right->Value());
+	return new DecimalResult(this->Value() + right->Value());
 }
 
 ExpressionResult* IntegerResult::Multiply(DecimalResult* right)
 {
-	return new DecimalResult(this->Value() + right->Value());
+	return new DecimalResult(this->Value() * right->Value());
 }
 
 ExpressionResult* IntegerResult::Divide(DecimalResult* right)
 {
-	return new DecimalResult(this->Value() + right->Value());
+	return new DecimalResult(right->Value() / this->Value());
 }
 
 ExpressionResult* IntegerResult::Power(DecimalResult* right)
 {
-	double result = 1, value = this->Value();
-	int power = right->Value();
+	double result = 1, value = right->Value();
+	int power = this->Value();
 	if (power < 0)
 		value = 1 / value;
 	for (size_t i = 0; i < power; i++)

@@ -609,6 +609,8 @@ bool String::IsAllowedInInteger(char symbol, unsigned index)
 bool String::IsInteger() const
 {
 	size_t length = Length();
+	if (length == 0)
+		return false;
 	for (size_t i = 0; i < length; i++)
 	{
 		char current = operator[](i);
@@ -638,6 +640,8 @@ int String::IntegerParse() const
 			throw std::runtime_error("Cannot parse string to integer!!!");
 		(result *= 10) += CharToDigit(operator[](i));
 	}
+	if (isNegative)
+		return -result;
 	return result;
 }
 
@@ -660,6 +664,8 @@ bool String::IsAllowedInDecimal(char symbol, bool& hasDecimalsAlready, unsigned 
 bool String::IsDecimal() const
 {
 	size_t length = Length();
+	if (length == 0)
+		return false;
 	bool hasDecimalsAlready = false;
 	for (size_t i = 0; i < length; i++)
 	{
@@ -703,7 +709,7 @@ double String::DecimalParse() const
 		result /= 10.0;
 
 	if (isNegative)
-		result *= -1;
+		return -result;
 	return result;
 }
 
@@ -742,10 +748,10 @@ char String::DigitToChar(byte number)
 String String::NumericString(size_t number)
 {
 	size_t length = String::GetLength(number);
-	String result(length + 1);
+	String result(length);
 
 	for (int i = length - 1; i >= 0; i--, number /= 10)
-		result[i] = DigitToChar(number % 10);
+		result[i] = DigitToChar((byte)(number % 10));
 
 	result[length] = '\0';
 	return result;
@@ -754,15 +760,17 @@ String String::NumericString(size_t number)
 String String::NumericString(int number)
 {
 	size_t length = String::GetLength(number);
+	size_t naturalNumber = number < 0 ? -number : number;
 
 	String result(length);
-	
-	if (number < 0 )
-		for (int i = length - 1; i >0; i--, number /= 10)
-			result[i] = DigitToChar(number % 10);
+
+	for (int i = length - 1; i > 0; i--, naturalNumber /= 10)
+		result[i] = DigitToChar(naturalNumber % 10);
+
+	if (number < 0)
+		result[0] = '-';
 	else
-		for (int i = length - 1; i >= 0; i--, number /= 10)
-			result[i] = DigitToChar(number % 10);
+		result[0] = DigitToChar(naturalNumber % 10);
 
 	result[length] = '\0';
 	return result;
@@ -776,21 +784,28 @@ String String::NumericString(double number)
 String String::NumericString(double number, size_t precision)
 {
 	int wholePart = (int)number;
-	double decimalPart = number - wholePart;
-	String result;
+	size_t length = GetLength(wholePart), resultLength = length + 1 + precision;
+	size_t naturalNumber = wholePart < 0 ? -wholePart : wholePart;
+	
+	String result(resultLength);
+	for (int i = length - 1; i > 0; i--, naturalNumber /= 10)
+		result[i] = DigitToChar(naturalNumber % 10);
+
 	if (number < 0)
-		result += '-';
-	result += NumericString(wholePart);
-	result += '.';
-	Vector<char> decimalDigits(precision);
+		result[0] = '-';
+	else
+		result[0] = DigitToChar(naturalNumber % 10);
+	result[length] = '.';
+
+	double decimalPart = number - wholePart, 
+		absDecimalPart = decimalPart < 0 ? -decimalPart : decimalPart;
 	for (size_t i = 0; i < precision; i++)
 	{
-		uint8_t digit = (uint8_t)(decimalPart *= 10);
+		uint8_t digit = (uint8_t)(absDecimalPart *= 10);
 		decimalPart -= digit;
-		decimalDigits.PushBack(DigitToChar(digit));
+		result[length + 1 + i] = DigitToChar(digit);
 	}
-		
-	result += decimalDigits;
+	result[resultLength] = '\0';
 	return result;
 }
 

@@ -3,11 +3,34 @@
 #include <iostream>
 typedef uint8_t byte;
 
+class StringIterator
+{
+	private:
+		const char* pointer = nullptr;
+		unsigned counter = 0;
+
+	public:
+		StringIterator() = default;
+		StringIterator(const char* pointer) : pointer(pointer) { }
+		StringIterator(const char* pointer, size_t length) : pointer (pointer), counter(length) { }
+		StringIterator& operator++() { counter++; return *this; }
+		StringIterator operator++(int) { StringIterator copy = *this; counter++; return copy; }
+		StringIterator& operator--() { counter--; return *this; }
+		StringIterator operator--(int) { StringIterator copy = *this; counter--; return copy; }
+		const char& operator[](unsigned index) { return pointer[index]; }
+		const char* operator->() { return (pointer + counter); }
+		const char& operator*() { return *(pointer + counter); }
+		bool operator==(const StringIterator& iterator) { return pointer == iterator.pointer && counter == iterator.counter; }
+		bool operator!=(const StringIterator& iterator) { return pointer != iterator.pointer || counter != iterator.counter; }
+};
+
 class String
 {
 	public:
+		using Iterator = StringIterator;
 		static const size_t DEFAULT_PRECISION = 2;
 		static const byte SMALL_STRING_MAX_SIZE = sizeof(size_t) + sizeof(char*) + sizeof(size_t) - 1; 
+
 		struct StringView
 		{
 			const char* data;
@@ -94,10 +117,10 @@ class String
 		static char DigitToChar(byte digit);
 		static size_t GetLength(size_t number);
 		static size_t GetLength(int number);
-		
+		Iterator begin() const { return Iterator(C_Str()); }
+		Iterator end() const { return Iterator(C_Str(), Length()); }
 		friend String operator+(const String& lhs, const String& rhs);
 		friend std::istream& operator>>(std::istream& input, String& string);
-		
 	    ~String();
 };
 

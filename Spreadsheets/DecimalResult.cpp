@@ -1,4 +1,5 @@
 #include "DecimalResult.h"
+#include <cmath>
 
 DecimalResult::DecimalResult(double value)
 {
@@ -63,12 +64,13 @@ ExpressionResult* DecimalResult::Divide(IntegerResult* right)
 
 ExpressionResult* DecimalResult::Power(IntegerResult* right)
 {
-    double result = 1, value = this->Value();
-    int power = right->Value();
+    double result = 1, value = right->Value();
+    double power = this->Value();
     if (power < 0)
         value = 1 / value;
-    for (size_t i = 0; i < power; i++)
-        result *= value;
+   /* for (size_t i = 0; i < power; i++)
+        result *= value;*/
+    result = pow(value, power);
     return new DecimalResult(result);
 }
 
@@ -89,11 +91,12 @@ ExpressionResult* DecimalResult::Divide(DecimalResult* right)
 
 ExpressionResult* DecimalResult::Power(DecimalResult* right)
 {
-    double result = 1, value = this->Value();
-    int power = right->Value();
+    double result = 1, value = right->Value();
+    double power = this->Value();
     if (power < 0)
         value = 1 / value;
-    for (size_t i = 0; i < power; i++)
-        result *= value;
+    /*for (size_t i = 0; i < power; i++)
+        result *= value;*/
+    result = pow(value, power);
     return new DecimalResult(result);
 }

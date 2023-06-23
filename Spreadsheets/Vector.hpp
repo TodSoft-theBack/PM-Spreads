@@ -2,13 +2,45 @@
 #include <iostream>
 #include <sstream>
 
+template<typename Vector>
+class VectorIterator 
+{
+    public:
+        using ValueType = typename Vector::ValueType;
+        using PointerType = ValueType*;
+        using ReferenceType = ValueType&;
+
+    private:
+        PointerType pointer = nullptr;
+
+    public:
+        VectorIterator() = default;
+        VectorIterator(PointerType pointer) : pointer(pointer) {}
+        VectorIterator& operator++() { pointer++;  return *this; }
+        VectorIterator operator++(int) { VectorIterator copy = *this; ++(*this); return copy; }
+        VectorIterator& operator--() { pointer--;  return *this; }
+        VectorIterator operator--(int) { VectorIterator copy = *this; --(*this); return copy; }
+        ReferenceType operator[](unsigned index) { return *(pointer + index); }
+        PointerType operator->() { return pointer; }
+        ReferenceType operator*() { return *pointer; }
+
+        bool operator==(const VectorIterator& iterator) { return pointer == iterator.pointer; }
+        bool operator!=(const VectorIterator& iterator) { return pointer != iterator.pointer; }
+};
+
+
 template<typename T>
 class Vector
 {
-    static const size_t DEFAULT_CAPACITY = 8;
-    T* collection = nullptr;
-    size_t count = 0;
-    size_t capacity = DEFAULT_CAPACITY;
+    public:
+        using ValueType = T;
+        using Iterator = VectorIterator<Vector<T>>;
+
+    private:
+        static const size_t DEFAULT_CAPACITY = 8;
+        T* collection = nullptr;
+        size_t count = 0;
+        size_t capacity = DEFAULT_CAPACITY;
 
     private:
         void CopyMemberData(const Vector<T>& vector);
@@ -22,7 +54,7 @@ class Vector
         Vector(size_t count, const T& defaultValue);
         Vector(const T* collection, size_t count);
         Vector(const Vector<T>& vector);
-        Vector(Vector<T>&& vector);
+        Vector(Vector<T>&& vector) noexcept;
 
         size_t Count() const;
         bool Contains(const T& element) const;
@@ -46,6 +78,9 @@ class Vector
         void RemoveAt(unsigned index);
         void RemoveBack();
         void Clear();
+
+        Iterator begin() { return Iterator(collection); }
+        Iterator end() { return Iterator(collection + count); }
 
         template<typename V>
         friend std::ostream& operator <<(std::ostream& stream, const Vector<V>& vector);
@@ -137,7 +172,7 @@ Vector<T>::Vector(const Vector<T>& vector)
 }
 
 template<typename T>
-Vector<T>::Vector(Vector<T>&& vector)
+Vector<T>::Vector(Vector<T>&& vector) noexcept
 {
     MoveMemberData(std::move(vector));
 }

@@ -26,7 +26,7 @@ Expression* ValueExpression::Clone() const
 	return new ValueExpression(*this);
 }
 
-void ValueExpression::SetValue(const String& stirng)
+void ValueExpression::SetValue(const String& string)
 {
-	this->value = value;
+	this->value = string;
 }
