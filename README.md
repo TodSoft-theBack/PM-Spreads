@@ -13,10 +13,10 @@
 - Changes the value of the cell at the specified column
 
 > Add Row *\<filepath>* 
-- Add an empty row to the current table file
+- Adds an empty row to the current table file
 
 > Add Column *\<filepath>* 
-- Add an empty column to the current table file
+- Adds an empty column to the current table file
 
 > Save *\<filepath>*
 - Saves the contents of the file if it is open and has been changes
