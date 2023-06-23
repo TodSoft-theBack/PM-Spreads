@@ -6,6 +6,11 @@ UnaryOperation::UnaryOperation(char _operator) : _operator(_operator)
 
 }
 
+char UnaryOperation::Operator() const
+{
+	return _operator;
+}
+
 ExpressionResult* UnaryOperation::operator()(ExpressionResult* operand) const
 {
 	switch (_operator)

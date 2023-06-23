@@ -21,7 +21,7 @@ ExpressionResult* BinaryExpression::Evaluate() const
 
 Expression* BinaryExpression::Clone() const
 {
-	return new BinaryExpression(*this);
+	return new BinaryExpression(operation.Operator(), leftOperand->Clone(), rightOperand->Clone());
 }
 
 BinaryExpression::~BinaryExpression()

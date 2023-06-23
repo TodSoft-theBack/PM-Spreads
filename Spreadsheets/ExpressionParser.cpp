@@ -164,6 +164,9 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 
 	Vector<String> result = OperationSplit(expression, operations, OperationPrecedence::Addition);
 
+	if (result.Count() == 2)
+		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
+
 	if (result.Count() == 1)
 		result = OperationSplit(expression, operations, OperationPrecedence::Multiplication);
 
@@ -176,7 +179,7 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 	if (result.Count() == 2)
 		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
 
-	Expression* output = new ValueExpression();
+	Expression* output = nullptr;
 	bool isInitialised = false;
 	size_t operationsCount = operations.Count();
 
@@ -185,6 +188,8 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 		if (!isInitialised)
 		{
 			String left = result[i], right = result[i + 1];
+			if (right.IsEmpty())
+				throw std::runtime_error("Invalid Expression");
 			if (left.IsEmpty())
 				output = new UnaryExpression(operations[i], ParseExpression(right));
 			else

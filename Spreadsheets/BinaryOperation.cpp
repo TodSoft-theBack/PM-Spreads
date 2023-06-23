@@ -5,6 +5,11 @@ BinaryOperation::BinaryOperation(char _operator) : _operator(_operator)
 
 }
 
+char BinaryOperation::Operator() const
+{
+	return _operator;
+}
+
 ExpressionResult* BinaryOperation::operator()(ExpressionResult* left, ExpressionResult* right) const
 {
 	switch (_operator)

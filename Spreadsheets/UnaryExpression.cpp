@@ -25,7 +25,7 @@ ExpressionResult* UnaryExpression::Evaluate() const
 
 Expression* UnaryExpression::Clone() const
 {
-	return new UnaryExpression(*this);
+	return new UnaryExpression(operation.Operator(), operand->Clone());
 }
 
 UnaryExpression::~UnaryExpression()
