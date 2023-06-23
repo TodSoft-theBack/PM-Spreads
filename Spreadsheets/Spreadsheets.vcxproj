@@ -141,7 +141,6 @@
     <ClCompile Include="IInterfacable.cpp" />
     <ClCompile Include="IntegerCell.cpp" />
     <ClCompile Include="IntegerResult.cpp" />
-    <ClCompile Include="ReferenceParser.cpp" />
     <ClCompile Include="Row.cpp" />
     <ClCompile Include="SpreadsheetsInterface.cpp" />
     <ClCompile Include="String.cpp" />
@@ -171,7 +170,6 @@
     <ClInclude Include="IInterfacable.h" />
     <ClInclude Include="IntegerCell.h" />
     <ClInclude Include="IntegerResult.h" />
-    <ClInclude Include="ReferenceParser.h" />
     <ClInclude Include="Row.h" />
     <ClInclude Include="SpreadsheetsInterface.h" />
     <ClInclude Include="String.h" />

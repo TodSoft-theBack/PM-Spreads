@@ -124,16 +124,6 @@ Vector<String> ExpressionParser::OperationSplit
 	return result;
 }
 
-bool ExpressionParser::IsBracket(char symbol)
-{
-	return symbol == '(' || symbol == ')';
-}
-
-bool ExpressionParser::IsSpace(char symbol)
-{
-	return symbol == ' ';
-}
-
 bool ExpressionParser::IsOperation(char symbol)
 {
 	return symbol == '+' || symbol == '-' || symbol == '*' || symbol == '/' || symbol == '^';

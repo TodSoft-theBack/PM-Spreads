@@ -1,7 +1,7 @@
 #include "Row.h"
 
 
-Row Row::ParseLine(const String& line)
+Row Row::ParseLine(const String& line, size_t rowIndex)
 {
 	if (line.Length() == 0)
 		return Row();
@@ -13,7 +13,7 @@ Row Row::ParseLine(const String& line)
 	return result;
 }
 
-Row Row::ParseLine(const String& line, size_t columnCount)
+Row Row::ParseLine(const String& line, size_t rowIndex, size_t columnCount)
 {
 	if (line.Length() == 0)
 		return Row();
@@ -22,27 +22,6 @@ Row Row::ParseLine(const String& line, size_t columnCount)
 	Row result;
 	for (size_t i = 0; i < count; i++)
 		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
-
-	if (count < columnCount)
-		for (size_t i = count; i < columnCount; i++)
-			result.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
-
-	return result;
-}
-
-Row Row::ParseLine(const String& line, size_t columnCount, Vector<size_t>& widths)
-{
-	if (line.Length() == 0)
-		return Row();
-	Vector<String> values = line.Split(',');
-	size_t count = values.Count();
-	Row result;
-	for (size_t i = 0; i < count; i++)
-	{
-		if (values[i].Length() > widths[i])
-			widths[i] = values[i].Length();
-		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
-	}
 
 	if (count < columnCount)
 		for (size_t i = count; i < columnCount; i++)

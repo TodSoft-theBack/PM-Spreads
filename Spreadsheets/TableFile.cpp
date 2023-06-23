@@ -10,9 +10,9 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 		size_t columns = table.Columns();
 		ReadLine(stream, line);
 		if (line.IsEmpty())
-			table.AddRow();
+			table.AddRow(i);
 		else
-			table.AddRow(Row::ParseLine(line, columns, table.ColumnWidths()));
+			table.AddRow(Row::ParseLine(line, i, columns));
 	}
 }
 
@@ -25,8 +25,16 @@ void TableFile::EditAtPos(unsigned row, unsigned column, const char* newValue)
 {
 	table[row][column] = CellFactory::CreateCell(newValue);
 	size_t length = strlen(newValue);
-	if (length > table.ColumnWidths()[column])
-		table.ColumnWidths()[column] = length;
+}
+
+void TableFile::AddEmptyLine()
+{
+	table.AddRow();
+}
+
+void TableFile::AddEmptyColumn()
+{
+	table.AddColumn();
 }
 
 void TableFile::SaveAs(const char* filename)
@@ -38,13 +46,29 @@ void TableFile::SaveAs(const char* filename)
 	for (size_t row = 0; row < rows; row++)
 	{
 		for (size_t column = 0; column < columns; column++)
-			stream << "\"" << table[row][column]->ToString(table.Collection()) << "\"" << (column < columns - 1 ? ", " : "");
+		{
+			stream << "\""; 
+			try
+			{
+				stream << table[row][column]->ToString(table.Collection());
+			}
+			catch (const std::runtime_error& error)
+			{
+				stream << error.what();
+			}
+			catch(...)
+			{
+				stream << "ERROR";
+			}
+			stream << "\"" << (column < columns - 1 ? ", " : "");
+		}
+			
 		stream << std::endl;
 	}
 	stream.close();
 }
 
-std::ostream& TableFile::Print(std::ostream& output) const
+std::ostream& TableFile::Print(std::ostream& output)
 {
 	return output << table;
 }

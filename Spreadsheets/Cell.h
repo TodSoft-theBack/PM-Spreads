@@ -4,8 +4,13 @@
 
 class Cell
 {
+	protected:
+		bool hasError = false;
+
 	public:
-		virtual String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const = 0;
+		bool HasError() const;
+		bool& HasError();
+		virtual String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) = 0;
 		virtual Cell* Clone() const = 0;
 		virtual ~Cell() = default;
 };

@@ -51,7 +51,7 @@ size_t File::CountLines()
     return CountMentions('\n');
 }
 
-std::ostream& File::Print(std::ostream& output) const
+std::ostream& File::Print(std::ostream& output)
 {
     return output << stream.rdbuf();
 }

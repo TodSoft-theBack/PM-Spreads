@@ -9,9 +9,8 @@ class Row
 		static const size_t DEFAULT_CAPACITY = 8;
 
 	public:
-		static Row ParseLine(const String& line);
-		static Row ParseLine(const String& line, size_t columnCount);
-		static Row ParseLine(const String& line, size_t columnCount, Vector<size_t>& widths);
+		static Row ParseLine(const String& line, size_t rowIndex);
+		static Row ParseLine(const String& line, size_t rowIndex, size_t columnCount);
 
 	private:
 		Cell** container = nullptr;

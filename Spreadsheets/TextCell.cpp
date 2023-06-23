@@ -18,7 +18,7 @@ Cell* TextCell::Clone() const
     return new TextCell(*this);
 }
 
-String TextCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const
+String TextCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference)
 {
     return value;
 }

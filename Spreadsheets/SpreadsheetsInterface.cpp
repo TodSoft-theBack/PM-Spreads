@@ -1,6 +1,6 @@
 #include "SpreadsheetsInterface.h"
 
-const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save","Print", "Edit", "Close" };
+const String SpreadsheetsInterface::COMMANDS[COMMANDS_COUNT] = { "Open", "Save","Print", "Edit", "Add", "Close" };
 
 void SpreadsheetsInterface::ExecuteCommand(const String& command, const Vector<String>& arguments)
 {
@@ -62,6 +62,28 @@ void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
 		throw std::runtime_error("Only 1 based indecies allowed!!");
 
 	fileManager->Edit(arguments[0], row, column, arguments[3]);
+}
+
+void SpreadsheetsInterface::Add(const Vector<String>& arguments)
+{
+	size_t argCount = arguments.Count();
+
+	if (argCount != 2)
+		throw std::runtime_error("No command with such arguments");
+
+	if (arguments[0] == "Row")
+	{
+		fileManager->AddNewLine(arguments[1]);
+		return;
+	}
+
+	if (arguments[0] == "Column")
+	{
+		fileManager->AddNewColumn(arguments[1]);
+		return;
+	}
+
+	throw std::runtime_error("No command with such arguments");
 }
 
 void SpreadsheetsInterface::Close(const Vector<String>& arguments)

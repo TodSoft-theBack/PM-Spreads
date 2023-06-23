@@ -12,7 +12,7 @@ class TextCell : public Cell
 		TextCell() = default;
 		TextCell(const char* value);
 		Cell* Clone() const override;
-		String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) const override;
+		String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) override;
 		~TextCell() = default;
 };
 

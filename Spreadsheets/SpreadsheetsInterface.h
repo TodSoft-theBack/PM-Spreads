@@ -17,6 +17,7 @@ class SpreadsheetsInterface : public IInterfacable
 		&SpreadsheetsInterface::Save,
 		&SpreadsheetsInterface::Print,
 		&SpreadsheetsInterface::Edit,
+		&SpreadsheetsInterface::Add,
 		&SpreadsheetsInterface::Close
 	};
 
@@ -29,6 +30,7 @@ class SpreadsheetsInterface : public IInterfacable
 		void Save(const Vector<String>& arguments);
 		void Print(const Vector<String>& arguments);
 		void Edit(const Vector<String>& arguments);
+		void Add(const Vector<String>& arguments);
 		void Close(const Vector<String>& arguments);
 		~SpreadsheetsInterface();
 };

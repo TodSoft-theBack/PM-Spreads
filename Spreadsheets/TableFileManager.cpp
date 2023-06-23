@@ -25,6 +25,18 @@ void TableFileManager::Edit(const char* filepath, unsigned row, unsigned column,
 	file->EditAtPos(row, column, newValue);
 }
 
+void TableFileManager::AddNewLine(const char* filepath)
+{
+	File* file = operator[](filepath);
+	file->AddEmptyLine();
+}
+
+void TableFileManager::AddNewColumn(const char* filepath)
+{
+	File* file = operator[](filepath);
+	file->AddEmptyColumn();
+}
+
 void TableFileManager::Save(const char* filepath)
 {
 	File* file = operator[](filepath);

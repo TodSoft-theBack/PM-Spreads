@@ -19,8 +19,10 @@ class File
 		const bool& HasChanged() const;
 		size_t CountMentions(char symbol);
 		size_t CountLines();
-		virtual std::ostream& Print(std::ostream& output) const;
+		virtual std::ostream& Print(std::ostream& output);
 		virtual void EditAtPos(unsigned lineIndex, unsigned rowPos, const char* newValue); 
+		virtual void AddEmptyLine() = 0;
+		virtual void AddEmptyColumn() = 0;
 		virtual void SaveAs(const char* filename) = 0;
 		virtual File* Clone() const = 0;
 		virtual ~File();
