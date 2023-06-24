@@ -23,16 +23,10 @@ Vector<String> ExpressionParser::OperationSplit
 			continue;
 
 		if (currentChar == '(')
-		{
 			isInSubexpression = true;
-			continue;
-		}
 
 		if (currentChar == ')')
-		{
 			isInSubexpression = false;
-			continue;
-		}	
 
 		if (IsOperation(currentChar) && GetOperatorPrecedence(currentChar) == precedence)
 		{
@@ -44,16 +38,18 @@ Vector<String> ExpressionParser::OperationSplit
 			operations.PushBack(currentChar);
 			hasOperations = true;
 			result.PushBack(String::Trim(string));
-			string = std::move(Vector<char>());
+			string.Clear();
 			continue;
 		}
 		string.PushBack(currentChar);
 	}
+
 	if (!hasOperations)
 	{
 		result.PushBack(input);
 		return result;
 	}
+
 	if (!string.IsEmpty())
 		result.PushBack(String::Trim(string));
 	return result;
@@ -152,6 +148,9 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 		case String::NumericType::Decimal:
 			return new ValueExpression(expression);
 	}
+
+	if (expression.First() == '(' && expression.Last() == ')')
+		return ParseExpression(expression.Substring(1, expression.Length() - 2));
 
 	Vector<char> operations;
 
