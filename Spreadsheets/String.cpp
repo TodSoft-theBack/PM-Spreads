@@ -787,18 +787,17 @@ String String::NumericString(double number)
 String String::NumericString(double number, size_t precision)
 {
 	int wholePart = (int)number;
-	size_t length = GetLength(wholePart), resultLength = length + 1 + precision;
+	size_t length = GetLength(wholePart), resultLength = length + 1 + precision + (number < 0);
 	size_t naturalNumber = wholePart < 0 ? -wholePart : wholePart;
-	
-	String result(resultLength);
-	for (int i = length - 1; i > 0; i--, naturalNumber /= 10)
-		result[i] = DigitToChar(naturalNumber % 10);
+	Vector<char> result(resultLength);
 
 	if (number < 0)
-		result[0] = '-';
-	else
-		result[0] = DigitToChar(naturalNumber % 10);
-	result[length] = '.';
+		result.PushBack('-');
+
+	for (int i = length - 1; i >= 0; i--, naturalNumber /= 10)
+		result.PushBack(DigitToChar(naturalNumber % 10));
+
+	result.PushBack('.');
 
 	double decimalPart = number - wholePart, 
 		absDecimalPart = decimalPart < 0 ? -decimalPart : decimalPart;
@@ -806,9 +805,8 @@ String String::NumericString(double number, size_t precision)
 	{
 		uint8_t digit = (uint8_t)(absDecimalPart *= 10);
 		absDecimalPart -= digit;
-		result[length + 1 + i] = DigitToChar(digit);
+		result.PushBack(DigitToChar(digit));
 	}
-	result[resultLength] = '\0';
 	return result;
 }
 
