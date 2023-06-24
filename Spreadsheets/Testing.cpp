@@ -1,21 +1,21 @@
 #include <iostream>
 #include "Application.h"
 #include "SpreadsheetsInterface.h"
-//#include "ExpressionParser.h"
-//#include "BinaryExpression.h"
-//#include "UnaryExpression.h"
-//#include "ValueExpression.h"
+#include "ExpressionParser.h"
+#include "BinaryExpression.h"
+#include "UnaryExpression.h"
+#include "ValueExpression.h"
 
 
 int main()
 {
-	Application app;
+	/*Application app;
 	app.SetApplicationName("PM Spreads");
 	app.SetExitCommand("Exit");
 	app.SetInterface(new SpreadsheetsInterface());
-	app.Run();
+	app.Run();*/
 
-	/*String expression;
+	String expression;
 	std::cout << "Enter math expression: ";
 	ReadLine(std::cin, expression);
 	while (expression != "Exit")
@@ -25,7 +25,7 @@ int main()
 		std::cout << result->GetResult() << std::endl;
 		std::cout << "Enter math expression: ";
 		ReadLine(std::cin, expression);
-	}*/
+	}
 	
 	return EXIT_SUCCESS;
 }

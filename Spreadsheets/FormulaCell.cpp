@@ -1,14 +1,15 @@
 #include "FormulaCell.h"
 #include "ExpressionParser.h"
 
-void ExtractRCAt(size_t& index, size_t length, const String& value, int& row, int& columns)
+void ExtractRowNColumnAt(size_t& index, const String& value, int& row, int& columns)
 {
 	String _row, _column;
 	bool collectingRow = true, collectingColumn = false;
-	size_t j = index + 1;
-	for (; j < length; j++)
+
+	size_t current = index + 1, length = value.Length();
+	for (; current < length; current++)
 	{
-		if (value[j] == 'C')
+		if (value[current] == 'C')
 		{
 			collectingRow = false;
 			collectingColumn = true;
@@ -17,79 +18,75 @@ void ExtractRCAt(size_t& index, size_t length, const String& value, int& row, in
 
 		if (collectingRow)
 		{
-			_row += value[j];
+			_row += value[current];
 			continue;
 		}
 
-		if (!String::IsDigit(value[j]))
-		{
-			index = j;
+		if (!String::IsDigit(value[current]))
 			break;
-		}
 
 		if (collectingColumn)
-			_column += value[j];
+			_column += value[current];
 	}
-	if (j == length)
-		index = length;
+
+	index = current;
 	row = _row.IntegerParse();
 	columns = _column.IntegerParse();
 }
 
-String FormulaCell::SubstituteTalbeReferences(const String& value, const Vector<Vector<UniquePtr<Cell>>>& referenceTable)
+String FormulaCell::SubstituteTalbeReferences(const String& value, const Vector<Vector<UniquePtr<Cell>>>& referenceTable) const
 {
-	Vector<char> parsedString;
+	Vector<char> substitutedString;
 	size_t length = value.Length();
 
-	for (size_t i = 0; i < length; i++)
+	for (size_t current = 0; current < length; current++)
 	{
-		if (value[i] == 'R')
+		if (value[current] == 'R')
 		{
 			int row = -1, column = -1;
-			ExtractRCAt(i, length, value, row, column);
+			ExtractRowNColumnAt(current, value, row, column);
 			if (row < 1 || column < 1)
 				throw std::runtime_error("Table indecies are 1-based!");
+
 			if (referenceTable[row - 1][column - 1].Value() == this)
-			{
-				hasError = true;
 				throw std::runtime_error("Self reference!");
-			}
 
-			if (referenceTable[row - 1][column - 1].Value()->HasError())
-				return "ERROR";
-			String cell = referenceTable[row - 1][column - 1].Value()->ToString(referenceTable);
+			String cell = referenceTable[row - 1][column - 1]->Evaluate(referenceTable);
 			String::NumericType type = cell.CheckType();
-
 			switch (type)
 			{
-			case String::NumericType::Integer:
-			case String::NumericType::Decimal:
-				for (char digit : cell)
-					parsedString.PushBack(digit);
-				break;
-			default:
-				parsedString.PushBack('0');
-				break;
+				case String::NumericType::Integer:
+				case String::NumericType::Decimal:
+					for (char digit : cell)
+						substitutedString.PushBack(digit);
+					break;
+
+				default:
+					substitutedString.PushBack('0');
+					break;
 			}
 			continue;
 		}
 		else
-			parsedString.PushBack(value[i]);
+			substitutedString.PushBack(value[current]);
 
 	}
-	return parsedString;
+	return substitutedString;
 }
 
-FormulaCell::FormulaCell(const String& string) : value(string)
-{
-}
+FormulaCell::FormulaCell(const String& string) : value(string) { }
 
 Cell* FormulaCell::Clone() const
 {
 	return new FormulaCell(*this);
 }
 
-String FormulaCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference)
+String FormulaCell::ToString() const
+{
+	return value;
+}
+
+String FormulaCell::Evaluate(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
 	return ExpressionParser::ParseExpression
 	(

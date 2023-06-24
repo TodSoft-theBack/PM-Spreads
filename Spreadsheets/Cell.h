@@ -4,13 +4,9 @@
 
 class Cell
 {
-	protected:
-		bool hasError = false;
-
 	public:
-		bool HasError() const;
-		bool& HasError();
-		virtual String ToString(const Vector<Vector<UniquePtr<Cell>>>& reference) = 0;
+		virtual String ToString() const = 0;
+		virtual String Evaluate(const Vector<Vector<UniquePtr<Cell>>>& tableReference) const = 0;
 		virtual Cell* Clone() const = 0;
 		virtual ~Cell() = default;
 };

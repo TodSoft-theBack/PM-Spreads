@@ -15,14 +15,13 @@ Cell* CellFactory::CreateCell(const char* value)
         return new FormulaCell(parser);
 
     String::NumericType type = parser.CheckType();
-
     switch (type)
     {
         case String::NumericType::Integer:
             return new IntegerCell(std::move(parser));
         case String::NumericType::Decimal:
             return new DecimalCell(std::move(parser));
-        default:
-            throw std::runtime_error("Invalid data type!!!");
     }
+
+    throw std::runtime_error("Invalid data type!!!");
 }

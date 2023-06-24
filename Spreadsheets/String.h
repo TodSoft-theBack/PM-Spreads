@@ -112,6 +112,8 @@ class String
 		static String NumericString(int number);
 		static String NumericString(double number);
 		static String NumericString(double number, size_t precision);
+		static String GetFromString(const char* value);
+		static bool IsEscapeChar(char symbol);
 		static bool IsDigit(char symbol);
 		static byte CharToDigit(char symbol);
 		static char DigitToChar(byte digit);

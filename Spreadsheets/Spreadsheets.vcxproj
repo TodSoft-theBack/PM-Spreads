@@ -130,7 +130,6 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="BinaryExpression.cpp" />
     <ClCompile Include="BinaryOperation.cpp" />
-    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="CellFactory.cpp" />
     <ClCompile Include="DecimalCell.cpp" />
     <ClCompile Include="DecimalResult.cpp" />

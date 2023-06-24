@@ -487,6 +487,9 @@ String String::Trim(const String& string)
 			break;
 		}
 
+	if (startIndex == endIndex)
+		return string[startIndex] == ' ' ? String() : string;
+
 	if (startIndex == 0 && endIndex == length - 1)
 		return string;
 
@@ -802,11 +805,30 @@ String String::NumericString(double number, size_t precision)
 	for (size_t i = 0; i < precision; i++)
 	{
 		uint8_t digit = (uint8_t)(absDecimalPart *= 10);
-		decimalPart -= digit;
+		absDecimalPart -= digit;
 		result[length + 1 + i] = DigitToChar(digit);
 	}
 	result[resultLength] = '\0';
 	return result;
+}
+
+String String::GetFromString(const char* value)
+{
+	size_t length = strlen(value);
+	if (value[0] != '\"' || value[length - 1] != '\"')
+		throw std::runtime_error("Invalid string!!!");
+	Vector<char> result(length - 2);
+	for (size_t i = 1; i < length - 1; i++)
+	{
+		if(value[i] != '\\')
+			result.PushBack(value[i]);
+	}
+	return result;
+}
+
+bool String::IsEscapeChar(char symbol)
+{
+	return symbol == '\"' || symbol == '\'' || symbol == '\\';
 }
 
 String operator+(const String& lhs, const String& rhs)

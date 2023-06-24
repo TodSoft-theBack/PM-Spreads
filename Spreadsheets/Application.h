@@ -16,6 +16,8 @@ class Application
 	String _exitCommand = DEFAULT_EXIT_COMMAND;
 	IInterfacable* _interface = nullptr;
 
+	static Vector<String> SplitToArguments(const String& string);
+
 	public:
 		Application() = default;
 		Application(const Application& appInterface) = delete;

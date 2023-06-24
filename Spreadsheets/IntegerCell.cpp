@@ -10,7 +10,12 @@ Cell* IntegerCell::Clone() const
 	return new IntegerCell(*this);
 }
 
-String IntegerCell::ToString(const Vector<Vector<UniquePtr<Cell>>>& reference)
+String IntegerCell::ToString() const
+{
+	return String::NumericString(value);
+}
+
+String IntegerCell::Evaluate(const Vector<Vector<UniquePtr<Cell>>>& reference) const
 {
 	return String::NumericString(value);
 }

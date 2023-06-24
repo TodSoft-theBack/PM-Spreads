@@ -55,7 +55,7 @@ void Window::ShowFullscreen()
                     for (int column = 0; column < Table.Columns(); column++)
                     {
                         ImGui::TableSetColumnIndex(column);
-                        ImGui::Text(Table[row][column]->ToString(Table.Collection()));
+                        ImGui::Text(Table[row][column]->Evaluate(Table.Collection()));
                     }
                 }
                 ImGui::EndTable();

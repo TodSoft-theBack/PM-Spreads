@@ -63,9 +63,6 @@
     <ClCompile Include="TableFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BinaryExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

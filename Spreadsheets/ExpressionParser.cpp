@@ -14,7 +14,6 @@ Vector<String> ExpressionParser::OperationSplit
 {
 	Vector<String> result;
 	Vector<char> string;
-	Vector<char> subexpression;
 	bool isInSubexpression = false, hasOperations = false;
 	size_t length = input.Length();
 
@@ -32,19 +31,16 @@ Vector<String> ExpressionParser::OperationSplit
 		if (currentChar == ')')
 		{
 			isInSubexpression = false;
-			string = subexpression;
-			subexpression.Clear();
 			continue;
-		}
-
-		if (isInSubexpression)
-		{
-			subexpression.PushBack(currentChar);
-			continue;
-		}
+		}	
 
 		if (IsOperation(currentChar) && GetOperatorPrecedence(currentChar) == precedence)
 		{
+			if (isInSubexpression)
+			{
+				string.PushBack(currentChar);
+				continue;
+			}
 			operations.PushBack(currentChar);
 			hasOperations = true;
 			result.PushBack(String::Trim(string));
@@ -72,7 +68,6 @@ Vector<String> ExpressionParser::OperationSplit
 {
 	Vector<String> result;
 	Vector<char> string;
-	Vector<char> subexpression;
 	bool isInSubexpression = false, hasOperations = false;
 	size_t length = input.Length();
 
@@ -90,26 +85,24 @@ Vector<String> ExpressionParser::OperationSplit
 		if (currentChar == ')')
 		{
 			isInSubexpression = false;
-			string = subexpression;
-			subexpression.Clear();
-			continue;
-		}
-
-		if (isInSubexpression)
-		{
-			subexpression.PushBack(currentChar);
 			continue;
 		}
 
 		if (IsOperation(currentChar))
 		{
+			if (isInSubexpression)
+			{
+				string.PushBack(currentChar);
+				continue;
+			}
 			operations.PushBack(currentChar);
 			precedences.PushBack(GetOperatorPrecedence(currentChar));
 			hasOperations = true;
 			result.PushBack(String::Trim(string));
-			string = std::move(Vector<char>());
+			string.Clear();
 			continue;
 		}
+
 		string.PushBack(currentChar);
 	}
 
@@ -142,7 +135,7 @@ ExpressionParser::OperationPrecedence ExpressionParser::GetOperatorPrecedence(ch
 			return OperationPrecedence::Multiplication;
 
 		case '^':
-		case 'r':
+		case 'r': // r stands for radical or root 3 r 8 means the 3rd root of 8 its here for future implementations
 			return OperationPrecedence::Exponentiation;
 
 		default:
@@ -162,22 +155,27 @@ Expression* ExpressionParser::ParseExpression(const String& expression)
 
 	Vector<char> operations;
 
+	//check for addition precedence
 	Vector<String> result = OperationSplit(expression, operations, OperationPrecedence::Addition);
-
+	
 	if (result.Count() == 2)
 		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
 
+	//check for multiplication precedence
 	if (result.Count() == 1)
 		result = OperationSplit(expression, operations, OperationPrecedence::Multiplication);
 
 	if (result.Count() == 2)
 		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
 
+	//check for exponentiation precedence
 	if (result.Count() == 1)
 		result = OperationSplit(expression, operations, OperationPrecedence::Exponentiation);
 
 	if (result.Count() == 2)
 		return new BinaryExpression(operations[0], ParseExpression(result[0]), ParseExpression(result[1]));
+
+	//check for brackets
 
 	Expression* output = nullptr;
 	bool isInitialised = false;

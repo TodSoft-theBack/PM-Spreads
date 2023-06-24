@@ -52,16 +52,16 @@ void SpreadsheetsInterface::Edit(const Vector<String>& arguments)
 {
 	size_t argCount = arguments.Count();
 	if (argCount != 4)
-		throw std::runtime_error("No command with such arguments");
+
 	if (!arguments[1].IsInteger() || !arguments[2].IsInteger())
 		throw std::runtime_error("Please provide valid row and columns!");
 
 	size_t row = arguments[1].IntegerParse() - 1, column = arguments[2].IntegerParse() - 1;
 
 	if (row < 0 || column < 0)
-		throw std::runtime_error("Only 1 based indecies allowed!!");
+		throw std::runtime_error("Only 1-based indecies allowed!!");
 
-	fileManager->Edit(arguments[0], row, column, arguments[3]);
+	fileManager->Edit(arguments[0], row, column, String::GetFromString(arguments[3]));
 }
 
 void SpreadsheetsInterface::Add(const Vector<String>& arguments)

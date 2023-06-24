@@ -92,19 +92,27 @@ std::ostream& operator<<(std::ostream& output, Table& table)
 		Vector<String> tableRow;
 		for (size_t column = 0; column < table.Columns(); column++)
 		{
-			
 			try
 			{
-				tableRow.PushBack(table.container[row][column]->ToString(table.Collection()));
+				tableRow.PushBack(table.container[row][column]->Evaluate(table.Collection()));
+			}
+			catch (std::runtime_error& ex)
+			{
+				tableRow.PushBack(ex.what());
 			}
 			catch (...)
 			{
-				tableRow.PushBack("Error");
+				tableRow.PushBack("ERROR");
 			}
+
 			if (row == 0)
+			{
 				columnWidths.PushBack(tableRow[column].Length());
+			}
 			else if (tableRow[column].Length() > columnWidths[column])
+			{
 				columnWidths[column] = tableRow[column].Length();
+			}
 		}
 		printTable.PushBack(tableRow);
 	}
@@ -115,9 +123,11 @@ std::ostream& operator<<(std::ostream& output, Table& table)
 		for (size_t column = 0; column < table.Columns(); column++)
 		{
 			output << printTable[row][column];
+
 			size_t spacesCount = columnWidths[column] - printTable[row][column].Length();
 			for (size_t i = 0; i < spacesCount; i++)
 				output << ' ';
+
 			output << (column != table.Columns() - 1 ? " | " : "");
 		}
 		output << " |" << std::endl;
