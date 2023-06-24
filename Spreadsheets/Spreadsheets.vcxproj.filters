@@ -1,180 +1,190 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Expression parser">
+      <UniqueIdentifier>{c95edd8d-d09f-4c94-91c6-bc9a628525ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="File managers">
+      <UniqueIdentifier>{53487029-6518-4fc7-b618-e599051ab593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cells">
+      <UniqueIdentifier>{522c190e-3614-4efa-88a1-c804cce41cc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application interface">
+      <UniqueIdentifier>{429c58ca-e98d-4d2e-862d-6829cc2c1336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{52ea9b9c-4a70-40e0-b7b4-60e2ecea6feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Table">
+      <UniqueIdentifier>{c237ad49-4a8c-4b68-bb15-08ed6bddfbea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Testing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CellFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Table.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntegerCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DecimalCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FormulaCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IInterfacable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SpreadsheetsInterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Row.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TableFileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TableFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BinaryExpression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UnaryExpression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExpressionParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UnaryOperation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClCompile>
     <ClCompile Include="BinaryOperation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntegerResult.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClCompile>
     <ClCompile Include="DecimalResult.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Expression parser</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpressionParser.cpp">
+      <Filter>Expression parser</Filter>
+    </ClCompile>
+    <ClCompile Include="IntegerResult.cpp">
+      <Filter>Expression parser</Filter>
+    </ClCompile>
+    <ClCompile Include="UnaryExpression.cpp">
+      <Filter>Expression parser</Filter>
+    </ClCompile>
+    <ClCompile Include="UnaryOperation.cpp">
+      <Filter>Expression parser</Filter>
     </ClCompile>
     <ClCompile Include="ValueExpression.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClCompile>
+    <ClCompile Include="CellFactory.cpp">
+      <Filter>Cells</Filter>
+    </ClCompile>
+    <ClCompile Include="DecimalCell.cpp">
+      <Filter>Cells</Filter>
+    </ClCompile>
+    <ClCompile Include="FormulaCell.cpp">
+      <Filter>Cells</Filter>
+    </ClCompile>
+    <ClCompile Include="IntegerCell.cpp">
+      <Filter>Cells</Filter>
+    </ClCompile>
+    <ClCompile Include="TextCell.cpp">
+      <Filter>Cells</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>File managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TableFileManager.cpp">
+      <Filter>File managers</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>File managers</Filter>
+    </ClCompile>
+    <ClCompile Include="TableFile.cpp">
+      <Filter>File managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Application interface</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadsheetsInterface.cpp">
+      <Filter>Application interface</Filter>
+    </ClCompile>
+    <ClCompile Include="String.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Table.cpp">
+      <Filter>Table</Filter>
+    </ClCompile>
+    <ClCompile Include="Row.cpp">
+      <Filter>Table</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CellFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="String.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntegerCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DecimalCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FormulaCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IInterfacable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpreadsheetsInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Row.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TableFileManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TableFile.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="DecimalResult.h">
+      <Filter>Expression parser</Filter>
     </ClInclude>
     <ClInclude Include="Expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BinaryExpression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UnaryExpression.h">
-      <Filter>Header Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClInclude>
     <ClInclude Include="ExpressionParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ValueExpression.h">
-      <Filter>Header Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClInclude>
     <ClInclude Include="ExpressionResult.h">
-      <Filter>Header Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClInclude>
-    <ClInclude Include="UniquePtr.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UnaryOperation.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="BinaryExpression.h">
+      <Filter>Expression parser</Filter>
     </ClInclude>
     <ClInclude Include="BinaryOperation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Expression parser</Filter>
+    </ClInclude>
+    <ClInclude Include="UnaryExpression.h">
+      <Filter>Expression parser</Filter>
+    </ClInclude>
+    <ClInclude Include="UnaryOperation.h">
+      <Filter>Expression parser</Filter>
+    </ClInclude>
+    <ClInclude Include="ValueExpression.h">
+      <Filter>Expression parser</Filter>
     </ClInclude>
     <ClInclude Include="IntegerResult.h">
-      <Filter>Header Files</Filter>
+      <Filter>Expression parser</Filter>
     </ClInclude>
-    <ClInclude Include="DecimalResult.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="File.h">
+      <Filter>File managers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>File managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TableFile.h">
+      <Filter>File managers</Filter>
+    </ClInclude>
+    <ClInclude Include="TableFileManager.h">
+      <Filter>File managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="CellFactory.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="DecimalCell.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="FormulaCell.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="IntegerCell.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="TextCell.h">
+      <Filter>Cells</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Application interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IInterfacable.h">
+      <Filter>Application interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadsheetsInterface.h">
+      <Filter>Application interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="UniquePtr.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="String.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Row.h">
+      <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Spreadsheets.vcxproj.user" />
+    <None Include="Example.csv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Pepe.csv">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

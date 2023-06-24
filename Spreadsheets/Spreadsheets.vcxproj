@@ -137,16 +137,15 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FormulaCell.cpp" />
-    <ClCompile Include="IInterfacable.cpp" />
     <ClCompile Include="IntegerCell.cpp" />
     <ClCompile Include="IntegerResult.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Row.cpp" />
     <ClCompile Include="SpreadsheetsInterface.cpp" />
     <ClCompile Include="String.cpp" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="TableFile.cpp" />
     <ClCompile Include="TableFileManager.cpp" />
-    <ClCompile Include="Testing.cpp" />
     <ClCompile Include="TextCell.cpp" />
     <ClCompile Include="UnaryExpression.cpp" />
     <ClCompile Include="UnaryOperation.cpp" />
@@ -183,7 +182,8 @@
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Spreadsheets.vcxproj.user" />
+    <None Include="Example.csv" />
+    <None Include="Pepe.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
