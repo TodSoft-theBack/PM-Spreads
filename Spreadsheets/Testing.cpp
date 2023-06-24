@@ -16,7 +16,7 @@ int main()
 	app.Run();*/
 
 	String expression;
-	std::cout << String::NumericString(-0.66) << "Enter math expression: ";
+	std::cout << "Enter math expression: ";
 	ReadLine(std::cin, expression);
 	while (expression != "Exit")
 	{
