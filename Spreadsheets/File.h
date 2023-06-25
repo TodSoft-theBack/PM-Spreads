@@ -8,8 +8,8 @@ class File
 		std::fstream stream;
 		String filename;
 		bool hasChanged = false;
+
 	public:
-		
 		File(const char* path);
 		File(const File& copy) = delete;
 		File& operator= (const File& file) noexcept = delete;
@@ -23,6 +23,8 @@ class File
 		virtual void EditAtPos(unsigned lineIndex, unsigned rowPos, const char* newValue); 
 		virtual void AddEmptyLine() = 0;
 		virtual void AddEmptyColumn() = 0;
+		virtual void InsertLineAt(size_t index) = 0;
+		virtual void InsertColumnAt(size_t index) = 0;
 		virtual void SaveAs(const char* filename) = 0;
 		virtual File* Clone() const = 0;
 		virtual ~File();

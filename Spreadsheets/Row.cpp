@@ -1,19 +1,7 @@
 #include "Row.h"
 
 
-Row Row::ParseLine(const String& line, size_t rowIndex)
-{
-	if (line.Length() == 0)
-		return Row();
-	Vector<String> values = line.Split(',');
-	size_t count = values.Count();
-	Row result;
-	for (size_t i = 0; i < count; i++)
-		result.AddCell(CellFactory::CreateCell(String::Trim(values[i])));
-	return result;
-}
-
-Row Row::ParseLine(const String& line, size_t rowIndex, size_t columnCount)
+Row Row::ParseLine(const String& line, size_t columnCount)
 {
 	if (line.Length() == 0)
 		return Row();
@@ -61,10 +49,7 @@ void Row::Resize(size_t size)
 	_capacity = size;
 	Cell** newContainer = new Cell* [_capacity];
 	for (size_t i = 0; i < _count; i++)
-	{
-		newContainer[i] = container[i]->Clone();
-		delete container[i];
-	}
+		newContainer[i] = container[i];
 	delete[] container;
 	container = newContainer;
 }
@@ -94,11 +79,30 @@ size_t Row::Size() const
 	return _count;
 }
 
+void Row::FillUpTo(size_t count)
+{
+	for (size_t i = 0; i < count - _count; i++)
+		container[_count + i] = CellFactory::CreateCell(TextCell::EMPTY_VALUE);
+}
+
 void Row::AddCell(Cell* cell)
 {
 	if (_count == _capacity)
 		Resize(2 * _capacity);
 	container[_count++] = cell;
+}
+
+void Row::InsertCellAt(size_t column, Cell* cell)
+{
+	if (column >= _count)
+		throw std::runtime_error("Invalid column");
+	if (_count == _capacity)
+		Resize(_capacity * 2);
+
+	for (int i = _count; i > column; i--)
+		container[i] = container[i - 1];
+	_count++;
+	container[column] = cell;
 }
 
 Row& Row::operator=(const Row& row)

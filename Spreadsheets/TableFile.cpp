@@ -10,10 +10,11 @@ TableFile::TableFile(const char* filepath) : File(filepath)
 		size_t columns = table.Columns();
 		ReadLine(stream, line);
 		if (line.IsEmpty())
-			table.AddRow(i);
+			table.AddRow();
 		else
-			table.AddRow(Row::ParseLine(line, i, columns));
+			table.AddRow(Row::ParseLine(line, columns));
 	}
+	
 }
 
 File* TableFile::Clone() const
@@ -23,8 +24,8 @@ File* TableFile::Clone() const
 
 void TableFile::EditAtPos(unsigned row, unsigned column, const char* newValue)
 {
+	hasChanged = true;
 	table[row][column] = CellFactory::CreateCell(newValue);
-	size_t length = strlen(newValue);
 }
 
 void TableFile::AddEmptyLine()
@@ -35,6 +36,16 @@ void TableFile::AddEmptyLine()
 void TableFile::AddEmptyColumn()
 {
 	table.AddColumn();
+}
+
+void TableFile::InsertLineAt(size_t index)
+{
+	table.InsertRowAt(index);
+}
+
+void TableFile::InsertColumnAt(size_t index)
+{
+	table.InsertColumnAt(index);
 }
 
 void TableFile::SaveAs(const char* filename)

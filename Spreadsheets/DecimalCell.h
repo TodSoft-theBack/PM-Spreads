@@ -12,6 +12,7 @@ class DecimalCell : public Cell
 		DecimalCell() = default;
 		DecimalCell(const String& string);
 		Cell* Clone() const override;
+		Alignment DEFAULT_ALIGMENT() const override;
 		String ToString() const override;
 		String Evaluate(const Vector<Vector<UniquePtr<Cell>>>& tableReference) const override;
 		~DecimalCell() = default;

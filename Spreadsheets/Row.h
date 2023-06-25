@@ -9,8 +9,7 @@ class Row
 		static const size_t DEFAULT_CAPACITY = 8;
 
 	public:
-		static Row ParseLine(const String& line, size_t rowIndex);
-		static Row ParseLine(const String& line, size_t rowIndex, size_t columnCount);
+		static Row ParseLine(const String& line, size_t columnCount);
 
 	private:
 		Cell** container = nullptr;
@@ -28,7 +27,9 @@ class Row
 		Row(const Row& copy);
 		Row(Row&& temporary) noexcept;
 		size_t Size() const;
+		void FillUpTo(size_t count);
 		void AddCell(Cell* cell);
+		void InsertCellAt(size_t column, Cell* cell);
 		Row& operator=(const Row& row);
 		Row& operator=(Row&& row) noexcept;
 		Vector<UniquePtr<Cell>> Collection() const;

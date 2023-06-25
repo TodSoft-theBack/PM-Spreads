@@ -10,6 +10,11 @@ Cell* IntegerCell::Clone() const
 	return new IntegerCell(*this);
 }
 
+Cell::Alignment IntegerCell::DEFAULT_ALIGMENT() const
+{
+	return Alignment::Right;
+}
+
 String IntegerCell::ToString() const
 {
 	return String::NumericString(value);

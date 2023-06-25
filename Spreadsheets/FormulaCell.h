@@ -16,6 +16,7 @@ class FormulaCell : public Cell
 		FormulaCell() = default;
 		FormulaCell(const String& string);
 		Cell* Clone() const override;
+		Alignment DEFAULT_ALIGMENT() const override;
 		String ToString() const override;
 		String Evaluate(const Vector<Vector<UniquePtr<Cell>>>& tableReference) const override;
 		~FormulaCell() = default;

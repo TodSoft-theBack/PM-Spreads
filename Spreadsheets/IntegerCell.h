@@ -10,6 +10,7 @@ class IntegerCell : public Cell
 		IntegerCell() = default;
 		IntegerCell(const String& string);
 		Cell* Clone() const override;
+		Alignment DEFAULT_ALIGMENT() const override;
 		String ToString() const override;
 		String Evaluate(const Vector<Vector<UniquePtr<Cell>>>& tableReference) const override;
 		~IntegerCell() = default;

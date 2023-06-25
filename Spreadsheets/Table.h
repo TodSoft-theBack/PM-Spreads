@@ -22,6 +22,9 @@ class Table
 		void AddRow(Row&& row);
 		void AddRow();
 		void AddColumn();
+		void InsertRowAt(size_t row);
+		void InsertColumnAt(size_t column);
+		void InsertColumnAt(size_t column, const char* header);
 		const Row& operator[](unsigned index) const;
 		Row& operator[](unsigned index);
 		friend std::ostream& operator<<(std::ostream& output, Table& table);

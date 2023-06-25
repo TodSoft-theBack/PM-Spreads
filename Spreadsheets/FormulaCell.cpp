@@ -51,6 +51,12 @@ String FormulaCell::SubstituteTalbeReferences(const String& value, const Vector<
 			if (referenceTable[row - 1][column - 1].Value() == this)
 				throw std::runtime_error("Self reference!");
 
+			if (row - 1 > referenceTable.Count() || column - 1 > referenceTable[row - 1].Count())
+			{
+				substitutedString.PushBack('0');
+				continue;
+			}
+
 			String cell = referenceTable[row - 1][column - 1]->Evaluate(referenceTable);
 			String::NumericType type = cell.CheckType();
 			switch (type)
@@ -79,6 +85,11 @@ FormulaCell::FormulaCell(const String& string) : value(string) { }
 Cell* FormulaCell::Clone() const
 {
 	return new FormulaCell(*this);
+}
+
+Cell::Alignment FormulaCell::DEFAULT_ALIGMENT() const
+{
+	return Alignment::Center;
 }
 
 String FormulaCell::ToString() const

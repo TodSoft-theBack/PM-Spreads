@@ -21,8 +21,6 @@ class FileManager
 		File*& operator[](unsigned index);
 		virtual void PrintFile(std::ostream& output, const char* filepath) = 0;
 		virtual void Edit(const char* filepath, unsigned lineIndex, unsigned columnPos, const char* newValue) = 0;
-		virtual void AddNewLine(const char* filepath) = 0;
-		virtual void AddNewColumn(const char* filepath) = 0;
 		virtual void Save(const char* filepath) = 0;
 		virtual void SaveAs(const char*  originalfilePath, const char* newFilePath) = 0;
 		virtual void CloseFile(const char* filepath) = 0;

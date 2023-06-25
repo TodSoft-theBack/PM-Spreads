@@ -11,6 +11,11 @@ Cell* DecimalCell::Clone() const
 	return new DecimalCell(*this);
 }
 
+Cell::Alignment DecimalCell::DEFAULT_ALIGMENT() const
+{
+	return Alignment::Right;
+}
+
 String DecimalCell::ToString() const
 {
 	return String::NumericString(value);

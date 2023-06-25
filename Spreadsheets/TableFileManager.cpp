@@ -37,6 +37,17 @@ void TableFileManager::AddNewColumn(const char* filepath)
 	file->AddEmptyColumn();
 }
 
+void TableFileManager::InsertLineAt(const char* filepath, size_t index)
+{
+	File* file = operator[](filepath);
+}
+
+void TableFileManager::InsertColumnAt(const char* filepath, size_t index)
+{
+	File* file = operator[](filepath);
+
+}
+
 void TableFileManager::Save(const char* filepath)
 {
 	File* file = operator[](filepath);

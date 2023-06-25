@@ -5,7 +5,12 @@ void Table::HandleColumnSizes(const Row& row)
 {
 	size_t rowSize = row.Size();
 	if (rowSize > _columns)
+	{
 		_columns = rowSize;
+		for (size_t row = 0; row < _rows; row++)
+			if (container[row].Size() < rowSize)
+				container[row].FillUpTo(rowSize);
+	}
 }
 
 Table::Table(size_t rows) : _rows(rows)
@@ -58,7 +63,6 @@ void Table::AddRow(Row&& row)
 
 void Table::AddRow()
 {
-	size_t rowIndex = _rows++;
 	Row row(_columns); 
 	for (size_t i = 0; i < _columns; i++)
 		row.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
@@ -70,6 +74,40 @@ void Table::AddColumn()
 	size_t columnIndex = _columns++;
 	for (size_t i = 0; i < Rows(); i++)
 		container[i].AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
+}
+
+void Table::InsertRowAt(size_t row)
+{
+	Row newRow(_columns);
+	for (size_t i = 0; i < _columns; i++)
+		newRow.AddCell(CellFactory::CreateCell(TextCell::EMPTY_VALUE));
+	container.InsertAt(row, newRow);
+}
+
+void Table::InsertColumnAt(size_t column)
+{
+	for (size_t row = 0; row < _rows; row++)
+		container[row].InsertCellAt
+		(
+			column, 
+			CellFactory::CreateCell(TextCell::EMPTY_VALUE)
+		);
+}
+
+void Table::InsertColumnAt(size_t column, const char* header)
+{
+	container[0].InsertCellAt
+	(
+		column,
+		CellFactory::CreateCell(header)
+	);
+
+	for (size_t row = 1; row < _rows; row++)
+		container[row].InsertCellAt
+		(
+			column, 
+			CellFactory::CreateCell(TextCell::EMPTY_VALUE)
+		);
 }
 
 const Row& Table::operator[](unsigned index) const
@@ -122,12 +160,37 @@ std::ostream& operator<<(std::ostream& output, Table& table)
 		output << "| ";
 		for (size_t column = 0; column < table.Columns(); column++)
 		{
-			output << printTable[row][column];
-
 			size_t spacesCount = columnWidths[column] - printTable[row][column].Length();
-			for (size_t i = 0; i < spacesCount; i++)
-				output << ' ';
 
+			switch (table[row][column]->DEFAULT_ALIGMENT())
+			{
+				case Cell::Alignment::Left:
+					output << printTable[row][column];
+
+					for (size_t i = 0; i < spacesCount; i++)
+						output << ' ';
+					break;
+
+				case Cell::Alignment::Center:
+					for (size_t i = 0; i < spacesCount / 2; i++)
+						output << ' ';
+
+					if (spacesCount % 2 == 1)
+						output << ' ';
+
+					output << printTable[row][column];
+
+					for (size_t i = 0; i < spacesCount / 2; i++)
+						output << ' ';
+					break;
+
+				case Cell::Alignment::Right:
+					for (size_t i = 0; i < spacesCount; i++)
+						output << ' ';
+
+					output << printTable[row][column];
+					break;
+			}
 			output << (column != table.Columns() - 1 ? " | " : "");
 		}
 		output << " |" << std::endl;
