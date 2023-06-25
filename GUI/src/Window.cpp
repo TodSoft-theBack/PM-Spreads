@@ -1,9 +1,12 @@
 #include "Window.h"
 #include "Spreadsheets/TableFile.h"
+#include <sstream>
 
 const char* Window::DEFAULT_NAME = "Basic window";
 const int Window::DEFAULT_WIDTH = 1280;
 const int Window::DEFAULT_HEIGHT = 720;
+
+ImGuiStyle* BaseStyle();
 
 void Window::ShowFullscreen()
 {
@@ -16,13 +19,14 @@ void Window::ShowFullscreen()
     ImGui::SetNextWindowSize(use_work_area ? viewport->WorkSize : viewport->Size);
     if (ImGui::Begin("Example: Fullscreen window", &isOpen, flags))
     {
+        
         ImGui::BeginMainMenuBar();
 
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("Open file", "Ctrl+O"))
             {
-
+                system("explorer C:\\");
             }
 
             if (ImGui::MenuItem("Save current", "Ctrl+S"))
@@ -41,12 +45,12 @@ void Window::ShowFullscreen()
         }
         ImGui::EndMainMenuBar();
 
-
-        Table Table(5,5);
+        Table Table;
         try
         {
-            TableFile tableFile("D:\\Coding\\PM Spreads\\Spreadsheets\\Pepe.csv");
+            TableFile tableFile("D:\\Coding\\PM Spreads\\Spreadsheets\\Example.csv");
             Table = tableFile.table;
+
             if (ImGui::BeginTable("Example.csv", Table.Columns()))
             {
                 for (int row = 0; row < Table.Rows(); row++)
@@ -54,8 +58,20 @@ void Window::ShowFullscreen()
                     ImGui::TableNextRow();
                     for (int column = 0; column < Table.Columns(); column++)
                     {
+                        String cell = tableFile.table[row][column]->Evaluate(tableFile.table.Collection());
                         ImGui::TableSetColumnIndex(column);
-                        ImGui::Text(Table[row][column]->Evaluate(Table.Collection()));
+                        float cellWidth = ImGui::GetWindowWidth() / Table.Columns() - 16;
+                        if (ImGui::Button(cell, ImVec2(cellWidth, 32)))
+                        {
+                            
+                        }
+
+                        if (ImGui::IsItemHovered())
+                        {
+                            ImGui::BeginTooltip();;
+                            ImGui::Text(tableFile.table[row][column]->ToString());
+                            ImGui::EndTooltip();
+                        }
                     }
                 }
                 ImGui::EndTable();
@@ -107,8 +123,8 @@ Window::Window(const char* name, int width, int height)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    (void)io;
-    ImGui::StyleColorsDark();
+    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 18.0f);
+    ImGui::StyleColorsLight(BaseStyle());
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 450");
 }
@@ -130,4 +146,11 @@ Window::~Window()
     ImGui::DestroyContext();
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+ImGuiStyle* BaseStyle()
+{
+    ImGuiStyle* style = &ImGui::GetStyle();
+
+    return style;
 }
