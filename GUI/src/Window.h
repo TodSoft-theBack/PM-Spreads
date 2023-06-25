@@ -15,11 +15,11 @@ class Window
         static const char* DEFAULT_NAME;
         static const int DEFAULT_WIDTH;
         static const int DEFAULT_HEIGHT;
-        void ShowFullscreen();
+        void ShowMainWindow(bool& isOpen);
         
         GLFWwindow* window; 
         TableFileManager fileManager;
-        virtual void Render();
+        virtual void Render(bool& shouldRender);
 
     public:
         Window();
