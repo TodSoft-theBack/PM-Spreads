@@ -1,4 +1,7 @@
 #include "Window.h"
+#include <Windows.h>
+#include <shobjidl.h> 
+#include <codecvt>
 #include "Spreadsheets/TableFile.h"
 #include <sstream>
 
@@ -17,16 +20,60 @@ void Window::ShowFullscreen()
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(use_work_area ? viewport->WorkPos : viewport->Pos);
     ImGui::SetNextWindowSize(use_work_area ? viewport->WorkSize : viewport->Size);
+
     if (ImGui::Begin("Example: Fullscreen window", &isOpen, flags))
     {
-        
         ImGui::BeginMainMenuBar();
 
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("Open file", "Ctrl+O"))
             {
-                system("explorer C:\\");
+                HRESULT executionCode = CoInitializeEx
+                (
+                    NULL, 
+                    COINIT_APARTMENTTHREADED | 
+                    COINIT_DISABLE_OLE1DDE
+                );
+
+                if (SUCCEEDED(executionCode))
+                {
+                    IFileOpenDialog* openFileDialog = nullptr;
+
+                    executionCode = CoCreateInstance
+                    (
+                        CLSID_FileOpenDialog,
+                        NULL, 
+                        CLSCTX_ALL, 
+                        IID_IFileOpenDialog, 
+                        reinterpret_cast<void**>(&openFileDialog)
+                    );
+
+                    if (SUCCEEDED(executionCode))
+                    {
+                        executionCode = openFileDialog->Show(NULL);
+
+                        if (SUCCEEDED(executionCode))
+                        {
+                            IShellItem* shell = nullptr;
+                            executionCode = openFileDialog->GetResult(&shell);
+
+                            if (SUCCEEDED(executionCode))
+                            {
+                                wchar_t* path;
+                                executionCode = shell->GetDisplayName(SIGDN_FILESYSPATH, &path);
+                                std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
+                                fileManager.OpenFile(convert.to_bytes(path).c_str());
+
+                                if (SUCCEEDED(executionCode))
+                                    CoTaskMemFree(path);
+                                shell->Release();
+                            }
+                        }
+                        openFileDialog->Release();
+                    }
+                    CoUninitialize();
+                }
             }
 
             if (ImGui::MenuItem("Save current", "Ctrl+S"))
@@ -44,32 +91,54 @@ void Window::ShowFullscreen()
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
+    }
 
-        Table Table;
-        try
+    size_t filesCount = fileManager.Count();
+    TableFile* selectedFile = nullptr;
+    if (ImGui::BeginTabBar("Files"))
+    {
+        for (size_t i = 0; i < filesCount; i++)
         {
-            TableFile tableFile("D:\\Coding\\PM Spreads\\Spreadsheets\\Example.csv");
-            Table = tableFile.table;
+            File* file = fileManager[i];
+            int lastIndex = file->Filename().LastIndexOf('\\');
+            String tabText = file->Filename().Substring(lastIndex+1);
 
-            if (ImGui::BeginTable("Example.csv", Table.Columns()))
+            //ImGuiTabItemFlags flags = i != filesCount-1 ? 0 : ImGuiTabItemFlags_SetSelected;
+
+            if (ImGui::BeginTabItem(tabText))
             {
-                for (int row = 0; row < Table.Rows(); row++)
+                selectedFile = (TableFile*)file;
+                ImGui::EndTabItem();
+            }
+            
+
+        }
+        ImGui::EndTabBar();
+    }
+    
+
+    try
+    {
+        if (selectedFile != nullptr)
+        {
+            
+            if (ImGui::BeginTable("TableArea", selectedFile->table.Columns()))
+            {
+                for (int row = 0; row < selectedFile->table.Rows(); row++)
                 {
                     ImGui::TableNextRow();
-                    for (int column = 0; column < Table.Columns(); column++)
+                    for (int column = 0; column < selectedFile->table.Columns(); column++)
                     {
-                        String cell = tableFile.table[row][column]->Evaluate(tableFile.table.Collection());
+                        String cell = selectedFile->table[row][column]->Evaluate(selectedFile->table.Collection());
                         ImGui::TableSetColumnIndex(column);
-                        float cellWidth = ImGui::GetWindowWidth() / Table.Columns() - 16;
-                        if (ImGui::Button(cell, ImVec2(cellWidth, 32)))
-                        {
-                            
-                        }
+                        float cellWidth = ImGui::GetWindowWidth() / selectedFile->table.Columns() - 16;
+
+                        ImGui::Button(cell, ImVec2(cellWidth, 32));
 
                         if (ImGui::IsItemHovered())
                         {
                             ImGui::BeginTooltip();;
-                            ImGui::Text(tableFile.table[row][column]->ToString());
+                            ImGui::Text(selectedFile->table[row][column]->ToString());
                             ImGui::EndTooltip();
                         }
                     }
@@ -77,17 +146,29 @@ void Window::ShowFullscreen()
                 ImGui::EndTable();
             }
         }
-        catch (const std::runtime_error& ex)
+    }
+    catch (const std::runtime_error& ex)
+    {
+        ImGui::OpenPopup("ExceptionPopUp");
+        if (ImGui::BeginPopupModal("ExceptionPopUp", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
             ImGui::Text(ex.what());
+            if (ImGui::Button("OK", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
         }
-        catch (...)
-        {
-            std::cout << "Generic error";
-        }
+        ImGui::EndPopup();
     }
+    catch (...)
+    {
+        std::cout << "Generic error";
+    }
+
+
     ImGui::End();
 }
+
 
 void Window::Render()
 {

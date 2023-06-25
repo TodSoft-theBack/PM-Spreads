@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 #include "Spreadsheets/Table.h"
+#include <Spreadsheets/TableFileManager.h>
 
 
 class Window
@@ -16,8 +17,8 @@ class Window
         static const int DEFAULT_HEIGHT;
         void ShowFullscreen();
         
-        GLFWwindow* window;
-
+        GLFWwindow* window; 
+        TableFileManager fileManager;
         virtual void Render();
 
     public:

@@ -16,6 +16,7 @@ class FileManager
 		FileManager() = default;
 		FileManager(const FileManager&) = delete;
 		FileManager& operator=(const FileManager&) = delete;
+		size_t Count() const;
 		virtual void OpenFile(const char* filepath) = 0;
 		File*& operator[](const char* filepath);
 		File*& operator[](unsigned index);

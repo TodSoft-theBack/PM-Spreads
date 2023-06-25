@@ -9,6 +9,11 @@ void FileManager::Resize(size_t size)
 	files = newCollection;
 }
 
+size_t FileManager::Count() const
+{
+	return _count;
+}
+
 File*& FileManager::operator[](const char* filepath)
 {
 	size_t count = _count;

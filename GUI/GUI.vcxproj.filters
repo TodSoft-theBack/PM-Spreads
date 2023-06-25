@@ -66,6 +66,9 @@
     <ClInclude Include="Dependancies\GLFW - Binaries\glfw-3.3.8.bin.WIN64\include\GLFW\glfw3native.h">
       <Filter>Header Files\GLFW3</Filter>
     </ClInclude>
+    <ClInclude Include="src\WString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -94,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="Dependancies\ImGUI\imgui_widgets.cpp">
       <Filter>Source Files\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WString.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
